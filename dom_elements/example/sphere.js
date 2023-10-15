@@ -1,6 +1,6 @@
 import * as THREE from 'https://cdn.skypack.dev/three@0.128.0/build/three.module.js';
 
-import {AnaglyphEffect} from 'https://cdn.skypack.dev/three@0.128.0/examples/jsm/effects/AnaglyphEffect.js';
+import { AnaglyphEffect } from 'https://cdn.skypack.dev/three@0.128.0/examples/jsm/effects/AnaglyphEffect.js';
 import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/controls/OrbitControls.js';
 import {OBJLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/OBJLoader.js';
 import {MTLLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/MTLLoader.js';
@@ -46,7 +46,7 @@ function init() {
 
     container = document.createElement( 'div' );
     // document.leftC.appendChild( container ) ;
-    leftC= document.querySelector('#bottomSection');
+    leftC= document.querySelector('#mainVideo');
     leftC.appendChild( container );
     // const leftC = document.getElementById("mainVideo").appendChild( container );
 
@@ -135,10 +135,8 @@ function init() {
     renderer.setPixelRatio( window.devicePixelRatio );
     leftC.appendChild( renderer.domElement );
 
-    // const width = window.innerWidth || 2;
-    // const height = window.innerHeight || 2;
-    const width = window.innerWidth ;
-    const height = window.innerHeight;
+    const width = window.innerWidth || 2;
+    const height = window.innerHeight || 2;
 
     // const width = leftC.innerWidth;
     // const height = leftC.innerHeight;
@@ -146,8 +144,8 @@ function init() {
     // console.log(width);
 
     effect = new AnaglyphEffect( renderer );
-    effect.setSize( width, height );
-    // effect.setSize( width*0.68, height*0.7);
+    // effect.setSize( width, height );
+    effect.setSize( width*0.68, height*0.7);
 
     const planeSize = 4000;
 
@@ -248,8 +246,8 @@ function init() {
 
 function onWindowResize() {
 
-    windowHalfX = window.innerWidth ;
-    windowHalfY = window.innerHeight;
+    windowHalfX = window.innerWidth / 2;
+    windowHalfY = window.innerHeight / 2;
 
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
