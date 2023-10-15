@@ -10,6 +10,7 @@ import {MTLLoader} from 'https://threejsfundamentals.org/threejs/resources/three
 let changeBtn = document.getElementById('changeBtn');
 let iframe1 = document.getElementById("iframe1");
 let element = iframe1.contentWindow.document.getElementsByTagName("H1")[0]
+let allElement = iframe1.contentWindow.document.querySelector("body").children;
 
 
 let container, camera, scene, renderer, effect, leftC;
@@ -29,8 +30,12 @@ animate();
 
 //change iframe elements
 changeBtn.onclick = function(){
+  console.log(allElement);
 
-  element.style.display = "none";
+  for (let i = 0; i < allElement.length; i++) {
+    allElement[i].style.display = "none";
+  }
+  // element.style.display = "none";
 
 }
 
