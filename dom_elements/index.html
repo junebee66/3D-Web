@@ -17,14 +17,25 @@
                         <input type="text" placeholder="Search.." name="search" id="searchText">
                         <button type="submit" id="searchButton"><i class="fa fa-search"></i></button>
                 </form>
-                <iframe src="https://junebee66.github.io/3D-Web/dom_elements/basic_web/basic.html" title="basic web"></iframe>
+                <button id="changeBtn">Try it</button>
+                <iframe src="/dom_elements/basic_web/basic.html" title="basic web" id="iframe1"></iframe>
         </div>
 
         <div id="bottomSection">
-                
+
         </div>
 
         <script type="module" src="script.js"></script>
+        <!-- <script type="module" src="iframe.js"></script> -->
+        
+        <!-- <script>
+                let iframe1 = document.getElementById("iframe1");
+                let element = iframe1.contentWindow.document.getElementsByTagName("H1")[0]
+        
+                function changeH1(){
+                element.style.display = "none";
+                }
+        </script> -->
 
 
 	</body>

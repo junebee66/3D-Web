@@ -5,9 +5,12 @@ import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/t
 import {OBJLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/OBJLoader.js';
 import {MTLLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/MTLLoader.js';
 
-// import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/loaders/GLTFLoader.js";
-// import { GLTFLoader } from 'https://unpkg.com/three/examples/jsm/loaders/GLTFLoader.js';
-// import { RGBELoader } from 'https://unpkg.com/three/examples/jsm/loaders/RGBELoader.js';
+
+//accessing iframe elements
+let changeBtn = document.getElementById('changeBtn');
+let iframe1 = document.getElementById("iframe1");
+let element = iframe1.contentWindow.document.getElementsByTagName("H1")[0]
+
 
 let container, camera, scene, renderer, effect, leftC;
 
@@ -15,21 +18,22 @@ let container, camera, scene, renderer, effect, leftC;
 const spheres = [];
 const boxes = [];
 
-
-
 let mouseX = 0;
 let mouseY = 0;
 
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 
-// document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-
 init();
 animate();
 
-    // container = document.querySelector('#leftColumn');
-    // document.body.appendChild( container );
+//change iframe elements
+changeBtn.onclick = function(){
+
+  element.style.display = "none";
+
+}
+
 
 function init() {
 
@@ -146,8 +150,8 @@ function init() {
     // console.log(width);
 
     effect = new AnaglyphEffect( renderer );
-    effect.setSize( width, height );
-    // effect.setSize( width*0.68, height*0.7);
+    // effect.setSize( width, height );
+    effect.setSize( width*0.9, height*0.9);
 
     const planeSize = 4000;
 

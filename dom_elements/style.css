@@ -41,13 +41,15 @@ body{
 
 iframe {
     width: 40%;
-    height:100%;
+    height:80%;
     padding-right: 3vw;
 
 }
 
 
 #bottomSection{
+    /* padding-top: 2vh; */
+    padding-left: 5%;
     width: 100%;
     height:100%;
 }
