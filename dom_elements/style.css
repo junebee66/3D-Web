@@ -1,0 +1,41 @@
+#topBar {
+    width: 100vw;
+    height:35vh;
+    margin-top: 3vh;
+    /* padding-top: 5vh;
+    padding-left: 5vh; */
+    display:flex;
+}
+
+#searchBar {
+    width: 50%;
+    height: 30%;
+    margin-top:10vh;
+    margin-left: 3vw;
+    padding-right: 3vw;
+
+}
+
+
+#searchText {
+    width: 80%;
+    height: 100%;
+    
+}
+
+#searchButton {
+    position: relative;
+    top:0px;
+
+    width: 10%;
+    height: 100%;
+    padding-block: 0px;
+    padding-inline: 0px;
+}
+
+iframe {
+    width: 30%;
+    height:100%;
+    padding-right: 3vw;
+
+}
