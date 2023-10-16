@@ -9,8 +9,14 @@ import {MTLLoader} from 'https://threejsfundamentals.org/threejs/resources/three
 //accessing iframe elements
 let changeBtn = document.getElementById('changeBtn');
 let iframe1 = document.getElementById("iframe1");
-let element = iframe1.contentWindow.document.getElementsByTagName("H1")[0]
+let allH1 = iframe1.contentWindow.document.getElementsByTagName("H1")
+let allH2 = iframe1.contentWindow.document.getElementsByTagName("H2")
 let allElement = iframe1.contentWindow.document.querySelector("body").children;
+
+
+//3D text
+let text = false;
+let cubeMat = new THREE.MeshLambertMaterial({ color: 0xff3300 });
 
 
 let container, camera, scene, renderer, effect, leftC;
@@ -25,17 +31,117 @@ let mouseY = 0;
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 
+
+//background image
+
+// const path = "https://threejs.org/examples/textures/cube/pisa/";
+// const format = '.png';
+// const urls = [
+//   path + 'px' + format, path + 'nx' + format,
+//   path + 'py' + format, path + 'ny' + format,
+//   path + 'pz' + format, path + 'nz' + format
+// ];
+
+// const path = "https://threejs.org/examples/textures/cube/SwedishRoyalCastle/";
+// const format = '.jpg';
+// const urls = [
+// 	path + 'px' + format, path + 'nx' + format,
+// 	path + 'py' + format, path + 'ny' + format,
+// 	path + 'pz' + format, path + 'nz' + format
+// ];
+
+const path = "https://threejs.org/examples/textures/cube/Park3Med/";
+const format = '.jpg';
+const urls = [
+    path + 'px' + format, path + 'nx' + format,
+    path + 'py' + format, path + 'ny' + format,
+    path + 'pz' + format, path + 'nz' + format
+];
+
+
+const textureCube = new THREE.CubeTextureLoader().load( urls );
+
 init();
 animate();
+// loadFont();
 
-//change iframe elements
+//loop all iframe elements to change
 changeBtn.onclick = function(){
-  console.log(allElement);
+  // console.log(elements);
 
-  for (let i = 0; i < allElement.length; i++) {
-    allElement[i].style.display = "none";
+  // for (let i = 0; i < allElement.length; i++) {
+  //   allElement[i].style.display = "none";
+  // }
+
+  let geometry = new THREE.SphereBufferGeometry( 0.1, 32, 16 );
+  let material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
+
+  for (let i = 0; i < allH1.length; i++) {
+
+    const bigMesh = new THREE.Mesh( geometry, material );
+
+    bigMesh.position.x = Math.random() * 2 ;
+    bigMesh.position.y = Math.random() * 2 ;
+    bigMesh.position.z = Math.random() * 2 ;
+    
+    // bigMesh.position.x = 0 ;
+    // bigMesh.position.y = 0 ;
+    // bigMesh.position.z = 0 ;
+
+
+    bigMesh.scale.x = bigMesh.scale.y = bigMesh.scale.z = Math.random() * 10;
+    
+    scene.add(bigMesh);
+
+    //text
+    let loader = new THREE.FontLoader();
+    loader.load(
+      "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/fonts/gentilis_regular.typeface.json",
+      function(font) {
+        let textGeo = new THREE.TextGeometry("Iz", {
+          font: font,
+          size: 0.2,
+          height: 0.003,
+          curveSegments: 50,
+          bevelEnabled: true,
+          bevelThickness: 1,
+          bevelSize: 0,
+          bevelOffset: 0,
+          bevelSegments: 5,
+          bevelEnabled: true
+        });
+        textGeo.computeBoundingBox();
+        textGeo.computeVertexNormals();
+        text = new THREE.Mesh(textGeo, cubeMat);
+        text.position.x = -textGeo.boundingBox.max.x / 2;
+        text.castShadow = true;
+        scene.add(text);
+    
+      }
+    );
+
+
+    // loadFont();
+    
   }
-  // element.style.display = "none";
+
+
+  
+  
+  
+  // for (let i = 0; i < allElement.length; i++) {
+    
+    
+    // if allElement[i] = 
+
+    // allElement[i].style.display = "none";
+    // console.log(allElement[3]);
+    
+  // }
+
+
+
+  
 
 }
 
@@ -43,28 +149,9 @@ changeBtn.onclick = function(){
 function init() {
 
 
-    // const gltfLoader = new THREE.GLTFLoader();
-
-
-                // render();
-            
-
-    // leftC = document.querySelector("#mainVideo");
-    // const node = document.getElementById("myList2").lastElementChild;
-    // document.getElementById("myList1").appendChild(node);
-
     container = document.createElement( 'div' );
-    // document.leftC.appendChild( container ) ;
     leftC= document.querySelector('#bottomSection');
     leftC.appendChild( container );
-    // const leftC = document.getElementById("mainVideo").appendChild( container );
-
-    
-
-
-    // container = document.querySelector('#leftColumn');
-    // document.body.appendChild( container );
-    // renderer = new THREE.WebGLRenderer({canvas});
 
 
     camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.01, 100 );
@@ -74,35 +161,7 @@ function init() {
     const controls = new OrbitControls(camera, leftC);
     controls.target.set(0, 5, 0);
     controls.update();
-      
 
-    const path = "https://threejs.org/examples/textures/cube/pisa/";
-    const format = '.png';
-    const urls = [
-    	path + 'px' + format, path + 'nx' + format,
-    	path + 'py' + format, path + 'ny' + format,
-    	path + 'pz' + format, path + 'nz' + format
-    ];
-
-    // const path = "https://threejs.org/examples/textures/cube/SwedishRoyalCastle/";
-    // const format = '.jpg';
-    // const urls = [
-    // 	path + 'px' + format, path + 'nx' + format,
-    // 	path + 'py' + format, path + 'ny' + format,
-    // 	path + 'pz' + format, path + 'nz' + format
-    // ];
-
-
-    // const path = "https://threejs.org/examples/textures/cube/Park3Med/";
-    // const format = '.jpg';
-    // const urls = [
-    //     path + 'px' + format, path + 'nx' + format,
-    //     path + 'py' + format, path + 'ny' + format,
-    //     path + 'pz' + format, path + 'nz' + format
-    // ];
-
-
-    const textureCube = new THREE.CubeTextureLoader().load( urls );
 
     scene = new THREE.Scene();
     scene.background = textureCube;
@@ -111,48 +170,14 @@ function init() {
     const geometry = new THREE.SphereBufferGeometry( 0.1, 32, 16 );
     const material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
 
-    
-
-    for ( let i = 0; i < 500; i ++ ) {
-
-        const mesh = new THREE.Mesh( geometry, material );
-
-        mesh.position.x = Math.random() * 10 - 5;
-        mesh.position.y = Math.random() * 10 - 5;
-        mesh.position.z = Math.random() * 10 - 5;
-
-        mesh.scale.x = mesh.scale.y = mesh.scale.z = Math.random() * 3 + 1;
-        
-        scene.add(mesh);
-        spheres.push(mesh);
-
-        const boxgeometry = new THREE.BoxGeometry(1,1,1);
-        const boxcube = new THREE.Mesh(boxgeometry, material);
-        boxcube.position.x = Math.random() * 10 - 5;
-        boxcube.position.y = Math.random() * 10 - 5;
-        boxcube.position.z = Math.random() * 10 - 5;
-
-        boxcube.scale.x = boxcube.scale.y = boxcube.scale.z = Math.random()/5;
-
-        // scene.add(boxcube); // remeber to put in the scene
-        boxes.push(boxcube);
-
-    }
 
 
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio( window.devicePixelRatio );
     leftC.appendChild( renderer.domElement );
 
-    // const width = window.innerWidth || 2;
-    // const height = window.innerHeight || 2;
     const width = window.innerWidth ;
     const height = window.innerHeight;
-
-    // const width = leftC.innerWidth;
-    // const height = leftC.innerHeight;
-
-    // console.log(width);
 
     effect = new AnaglyphEffect( renderer );
     // effect.setSize( width, height );
@@ -219,39 +244,33 @@ function init() {
         camera.lookAt(boxCenter.x, boxCenter.y, boxCenter.z);
       }
 
-    const mtlLoader = new MTLLoader();
-    mtlLoader.load('https://threejsfundamentals.org/threejs/resources/models/windmill_2/windmill-fixed.mtl', (mtl) => {
-      mtl.preload();
-      const objLoader = new OBJLoader();
-      objLoader.setMaterials(mtl);
-      objLoader.load('https://threejsfundamentals.org/threejs/resources/models/windmill_2/windmill.obj', (root) => {
-        root.scale.x = root.scale.y = root.scale.z = 0.001;   
-      scene.add(root);
+    //Windmill Model
+    // const mtlLoader = new MTLLoader();
+    // mtlLoader.load('https://threejsfundamentals.org/threejs/resources/models/windmill_2/windmill-fixed.mtl', (mtl) => {
+    //   mtl.preload();
+    //   const objLoader = new OBJLoader();
+    //   objLoader.setMaterials(mtl);
+    //   objLoader.load('https://threejsfundamentals.org/threejs/resources/models/windmill_2/windmill.obj', (root) => {
+    //     root.scale.x = root.scale.y = root.scale.z = 0.001;   
+    //   scene.add(root);
 
-        // compute the box that contains all the stuff
-        // from root and below
-        const box = new THREE.Box3().setFromObject(root);
+    //     // compute the box that contains all the stuff
+    //     // from root and below
+    //     const box = new THREE.Box3().setFromObject(root);
 
-        const boxSize = box.getSize(new THREE.Vector3()).length();
-        const boxCenter = box.getCenter(new THREE.Vector3());
+    //     const boxSize = box.getSize(new THREE.Vector3()).length();
+    //     const boxCenter = box.getCenter(new THREE.Vector3());
 
-        // set the camera to frame the box
-        frameArea(boxSize * 1.2, boxSize, boxCenter, camera);
+    //     // set the camera to frame the box
+    //     frameArea(boxSize * 1.2, boxSize, boxCenter, camera);
 
-        // update the Trackball controls to handle the new size
-        controls.maxDistance = boxSize * 10;
-        controls.target.copy(boxCenter);
-        controls.update();
-      });
-    });
+    //     // update the Trackball controls to handle the new size
+    //     controls.maxDistance = boxSize * 10;
+    //     controls.target.copy(boxCenter);
+    //     controls.update();
+    //   });
+    // });
 
-
-
-
-
-    //
-
-    // window.addEventListener( 'resize', onWindowResize, false );
 
 }
 
@@ -267,14 +286,6 @@ function onWindowResize() {
 
 }
 
-// function onDocumentMouseMove( event ) {
-
-//     mouseX = ( event.clientX - windowHalfX ) / 100;
-//     mouseY = ( event.clientY - windowHalfY ) / 100;
-
-// }
-
-//
 
 function animate() {
 
@@ -316,25 +327,6 @@ function render() {
         box.position.y = 5 * Math.sin( timer + i * 1.1 );
 
     }
-
-    // function resizeRendererToDisplaySize(renderer) {
-    //     const canvas = renderer.domElement;
-    //     const width = canvas.clientWidth;
-    //     const height = canvas.clientHeight;
-    //     const needResize = canvas.width !== width || canvas.height !== height;
-    //     if (needResize) {
-    //       renderer.setSize(width, height, false);
-    //     }
-    //     return needResize;
-    //   }
-    
-
-
-    // if (resizeRendererToDisplaySize(renderer)) {
-    //     const canvas = renderer.domElement;
-    //     camera.aspect = canvas.clientWidth / canvas.clientHeight;
-    //     camera.updateProjectionMatrix();
-    //   }
 
 
       effect.render( scene, camera );
