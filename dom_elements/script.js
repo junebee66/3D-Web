@@ -37,13 +37,13 @@ let windowHalfY = window.innerHeight / 2;
 
 //background image
 
-// const path = "https://threejs.org/examples/textures/cube/pisa/";
-// const format = '.png';
-// const urls = [
-//   path + 'px' + format, path + 'nx' + format,
-//   path + 'py' + format, path + 'ny' + format,
-//   path + 'pz' + format, path + 'nz' + format
-// ];
+const path = "https://threejs.org/examples/textures/cube/pisa/";
+const format = '.png';
+const urls = [
+  path + 'px' + format, path + 'nx' + format,
+  path + 'py' + format, path + 'ny' + format,
+  path + 'pz' + format, path + 'nz' + format
+];
 
 // const path = "https://threejs.org/examples/textures/cube/SwedishRoyalCastle/";
 // const format = '.jpg';
@@ -61,13 +61,14 @@ let windowHalfY = window.innerHeight / 2;
 //     path + 'pz' + format, path + 'nz' + format
 // ];
 
-const path = "https://raw.githubusercontent.com/junebee66/3D-Web/main/dom_elements/source/";
-const format = '.jpg';
-const urls = [
-    path + 'px' + format, path + 'nx' + format,
-    path + 'py' + format, path + 'ny' + format,
-    path + 'pz' + format, path + 'nz' + format
-];
+// const path = "https://threejs.org/examples/textures/cube/MilkyWay/";
+// const format = '.jpg';
+// const urls = [
+//     path + 'dark-s_px' + format, path + 'dark-s_nx' + format,
+//     path + 'dark-s_py' + format, path + 'dark-s_ny' + format,
+//     path + 'dark-s_pz' + format, path + 'dark-s_nz' + format
+// ];
+
 
 
 const textureCube = new THREE.CubeTextureLoader().load( urls );
@@ -230,7 +231,7 @@ changeBtn.onclick = function(){
         // console.log(allDiv[i].children[a].currentSrc);
         let imgUrl = allDiv[i].children[a].currentSrc;
 
-        const divImgGeometry = new THREE.PlaneGeometry( 5, 5 );
+        const divImgGeometry = new THREE.PlaneGeometry( 15, 15 );
         const divImgMaterial = new THREE.MeshBasicMaterial();
         let divImgLoader = new THREE.TextureLoader();
         divImgLoader.load( imgUrl, 
@@ -241,9 +242,13 @@ changeBtn.onclick = function(){
           });
         
         const divImgPlane = new THREE.Mesh( divImgGeometry, divImgMaterial );
-        divImgPlane.position.x = Math.random() * -5 ;
-        divImgPlane.position.y = Math.random() * -5 ;
-        divImgPlane.position.z = Math.random() * -5 ;
+        divImgPlane.position.x = Math.random() * -35 +i;
+        divImgPlane.position.y = Math.random() * -5 +i;
+        divImgPlane.position.z = Math.random() * -15 +i;
+        
+
+
+
         scene.add( divImgPlane );
 
 
