@@ -61,7 +61,7 @@ let windowHalfY = window.innerHeight / 2;
 //     path + 'pz' + format, path + 'nz' + format
 // ];
 
-const path = "";
+const path = "https://raw.githubusercontent.com/junebee66/3D-Web/main/dom_elements/source/";
 const format = '.jpg';
 const urls = [
     path + 'px' + format, path + 'nx' + format,
