@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<!-- saved from url=(0027)https://cims.nyu.edu/~kapp/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Craig Kapp @ NYU</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./Craig Kapp @ NYU_files/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="./Craig Kapp @ NYU_files/main.css" rel="stylesheet">
+    
+    <!-- jQuery -->
+    <script src="./Craig Kapp @ NYU_files/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+	<!-- p5 core library -->
+	<script src="./Craig Kapp @ NYU_files/p5.js"></script>
+	
+  </head>
+
+  <body>
+
+    <!-- Static navbar -->
+    <div class="navbar navbar-inverse navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="https://cims.nyu.edu/~kapp/index.php">
+Craig M. Kapp
+	          <div style="color: #DDD; font-size: 0.6em;">
+	          	Clinical Professor<br>
+	          	Department of Computer Science<br>
+	          	New York University
+	          </div>          </a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://cims.nyu.edu/~kapp/">Home</a></li>
+            <li><a href="https://cims.nyu.edu/~kapp/classes.php">Classes</a></li>
+            <li><a href="https://cims.nyu.edu/~kapp/aframep5/">A-Frame P5</a></li>          
+            <li><a href="https://cims.nyu.edu/~kapp/aframep5-ar/">A-Frame P5 AR</a></li>                    </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+	<!-- +++++ Welcome Section +++++ -->
+	<div id="ww" style="position: relative;">
+		<div style="top: 0px; width: 100%; height: 100%; position: absolute; z-index: -1;" id="p5container"><canvas id="defaultCanvas0" class="p5Canvas" width="3072" height="2304" style="width: 100%; height: auto;"></canvas></div>
+		
+		<script>
+			// simple p5 background animation
+			let theCircles = [];
+			let w, h;
+
+			function setup() {
+				w = $("#ww").width();
+				h = w * .75;
+				let c = createCanvas(w, h);
+				c.parent('#p5container');
+				c.style('width', '100%');
+				c.style('height', 'auto');
+				for (let i = 0; i < 50; i++) {
+					theCircles.push( new Circle() );
+					console.log("circle");
+				}
+			}
+
+			function draw() {
+  				background(255);
+  				for (let i = 0; i < theCircles.length; i++) {
+	  				theCircles[i].display();
+	  			}
+	  		}
+
+	  		class Circle {
+		  		constructor() {
+			  		this.reset(false);
+		  		}
+		  		
+		  		reset(left) {
+			  		if (!left) {
+				  		this.x = random(0,width);
+				  	}
+				  	else {
+					  	this.x = 0;
+				  	}
+				  	
+				  	this.r = random(25, 200);
+				  	this.y = random(0, height-this.r);
+				  	this.cr = 0;
+				  	this.c = color(random(255), random(255), random(255), random(10,25));
+				  	this.s = random(1,3);
+				}  
+  
+			display() {
+				noStroke();
+				fill(this.c);
+				ellipse(this.x,this.y,this.cr,this.cr);
+				this.x += this.s;
+				if (this.cr < this.r) {
+					this.cr += 1;
+				}
+				if (this.x - this.r > width) {
+					this.reset(true);
+				}
+			}
+		}
+		</script>
+
+	    <div class="container" style="z-index: 2; position: relative;">	    
+	    
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2">
+					
+					<h1>Hi, I'm Craig</h1>
+					<p>I'm a Clinical Professor of Computer Science at the Courant Institute of Mathematical Sciences at New York University.  My interests include augmented reality, data visualization, graphics and gaming, interactive media and responsive software design, digital storytelling, web-based instructional and educational technology platforms and developing assistive technologies for people with disabilities.</p>
+<p>To get in touch feel free to e-mail me at kapp [-at-] cs [-dot-] nyu [-dot-] edu</p>
+				
+				</div><!-- /col-lg-8 -->
+			</div><!-- /row -->
+	    </div> <!-- /container -->
+	</div><!-- /ww -->
+	
+	
+	
+	
+	<!-- +++++ Footer Section +++++ -->
+	
+	<div id="footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<h2>Contact</h2>
+					<p>
+						e: kapp [-at-] cs [-dot-] nyu [-dot-] edu<br>
+						p: +1.212.998.3253
+					</p>
+				</div><!-- /col-lg-4 -->
+								
+				
+			
+			</div>
+		
+		</div>
+	</div>
+	
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./Craig Kapp @ NYU_files/bootstrap.min.js"></script>
+  
+
+<main></main></body></html>

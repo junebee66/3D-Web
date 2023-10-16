@@ -11,6 +11,7 @@ let changeBtn = document.getElementById('changeBtn');
 let iframe1 = document.getElementById("iframe1");
 let allH1 = iframe1.contentWindow.document.getElementsByTagName("H1")
 let allH2 = iframe1.contentWindow.document.getElementsByTagName("H2")
+let allImgs = iframe1.contentWindow.document.getElementsByTagName("img")
 let allDiv = iframe1.contentWindow.document.getElementsByTagName("div")
 // let allImages = iframe1.contentWindow.document.getElementsByTagName("H2")
 // let allElement = iframe1.contentWindow.document.querySelector("body").children;
@@ -177,6 +178,31 @@ changeBtn.onclick = function(){
     );
     
   }
+
+
+  // //Images
+  // for (let i = 0; i < allImgs.length; i++) {
+  //   // console.log(allImgs[i].src);
+  //   let imgUrl = allImgs[i].src;
+
+  //   const ImgGeometry = new THREE.PlaneGeometry( 15, 15 );
+  //   const ImgMaterial = new THREE.MeshBasicMaterial();
+  //   let ImgLoader = new THREE.TextureLoader();
+  //   ImgLoader.load( imgUrl, 
+  //     function ( ImgTexture ) {    
+  //       ImgMaterial.map = ImgTexture;
+  //       // console.log(divImgMaterial.map);
+  //       ImgMaterial.needsUpdate = true;
+  //     });
+    
+  //   const ImgPlane = new THREE.Mesh( ImgGeometry, ImgMaterial );
+  //   ImgPlane.position.x = Math.random() * -35 +i;
+  //   ImgPlane.position.y = Math.random() * -5 +i;
+  //   ImgPlane.position.z = Math.random() * 5 +i;
+
+  //   scene.add( ImgPlane );
+
+  // }
 
 
   // Divs
