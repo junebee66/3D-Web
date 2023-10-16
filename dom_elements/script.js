@@ -11,12 +11,15 @@ let changeBtn = document.getElementById('changeBtn');
 let iframe1 = document.getElementById("iframe1");
 let allH1 = iframe1.contentWindow.document.getElementsByTagName("H1")
 let allH2 = iframe1.contentWindow.document.getElementsByTagName("H2")
-let allElement = iframe1.contentWindow.document.querySelector("body").children;
+let allDiv = iframe1.contentWindow.document.getElementsByTagName("div")
+// let allImages = iframe1.contentWindow.document.getElementsByTagName("H2")
+// let allElement = iframe1.contentWindow.document.querySelector("body").children;
 
 
 //3D text
 let text = false;
 let cubeMat = new THREE.MeshLambertMaterial({ color: 0xff3300 });
+
 
 
 let container, camera, scene, renderer, effect, leftC;
@@ -50,7 +53,15 @@ let windowHalfY = window.innerHeight / 2;
 // 	path + 'pz' + format, path + 'nz' + format
 // ];
 
-const path = "https://threejs.org/examples/textures/cube/Park3Med/";
+// const path = "https://threejs.org/examples/textures/cube/Park3Med/";
+// const format = '.jpg';
+// const urls = [
+//     path + 'px' + format, path + 'nx' + format,
+//     path + 'py' + format, path + 'ny' + format,
+//     path + 'pz' + format, path + 'nz' + format
+// ];
+
+const path = "";
 const format = '.jpg';
 const urls = [
     path + 'px' + format, path + 'nx' + format,
@@ -67,7 +78,6 @@ animate();
 
 //loop all iframe elements to change
 changeBtn.onclick = function(){
-  // console.log(elements);
 
   // for (let i = 0; i < allElement.length; i++) {
   //   allElement[i].style.display = "none";
@@ -76,53 +86,175 @@ changeBtn.onclick = function(){
   let geometry = new THREE.SphereBufferGeometry( 0.1, 32, 16 );
   let material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
 
+  // H1 Tags
   for (let i = 0; i < allH1.length; i++) {
 
-    const bigMesh = new THREE.Mesh( geometry, material );
+    let h1text = allH1[i].innerText;
 
-    bigMesh.position.x = Math.random() * 2 ;
-    bigMesh.position.y = Math.random() * 2 ;
-    bigMesh.position.z = Math.random() * 2 ;
-    
-    // bigMesh.position.x = 0 ;
-    // bigMesh.position.y = 0 ;
-    // bigMesh.position.z = 0 ;
+    const cssObjH1 = window.getComputedStyle(allH1[i], null);
+    // let bgColorH1 = cssObjH1.getPropertyValue("background-color");
+    console.log(cssObjH1);
+    // document.getElementById("demo").innerHTML = bgColor;
 
-
-    bigMesh.scale.x = bigMesh.scale.y = bigMesh.scale.z = Math.random() * 10;
-    
-    scene.add(bigMesh);
-
-    //text
+    // create text
     let loader = new THREE.FontLoader();
     loader.load(
       "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/fonts/gentilis_regular.typeface.json",
       function(font) {
-        let textGeo = new THREE.TextGeometry("Iz", {
+        let textGeo = new THREE.TextGeometry(h1text, {
           font: font,
-          size: 0.2,
+          size: 1,
           height: 0.003,
-          curveSegments: 50,
+          curveSegments: 10,
           bevelEnabled: true,
           bevelThickness: 1,
           bevelSize: 0,
           bevelOffset: 0,
-          bevelSegments: 5,
-          bevelEnabled: true
+          bevelSegments: 15,
+          bevelEnabled: false
         });
         textGeo.computeBoundingBox();
         textGeo.computeVertexNormals();
         text = new THREE.Mesh(textGeo, cubeMat);
-        text.position.x = -textGeo.boundingBox.max.x / 2;
+        // text.position.x = -textGeo.boundingBox.max.x / 2 + Math.random() ;
+        // text.position.y = -textGeo.boundingBox.max.x / 2 + Math.random() ;
+        // text.position.z = -textGeo.boundingBox.max.x / 2 + Math.random() ;
+
+        text.position.x = -5 ;
+        text.position.y = 5+(-2*i)  ;
+        // text.position.x = Math.random() * 5 ;
+        // text.position.y = Math.random() * 5 ;
+        // text.position.z = Math.random() * 5 ;
+
         text.castShadow = true;
         scene.add(text);
     
       }
     );
-
-
-    // loadFont();
     
+  }
+
+  // H2 Tags
+  for (let i = 0; i < allH2.length; i++) {
+
+    let h2text = allH2[i].innerText;
+
+    //create text
+    let loader = new THREE.FontLoader();
+    loader.load(
+      "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/fonts/gentilis_regular.typeface.json",
+      function(font) {
+        let textGeo = new THREE.TextGeometry(h2text, {
+          font: font,
+          size: 1,
+          height: 0.003,
+          curveSegments: 10,
+          bevelEnabled: true,
+          bevelThickness: 1,
+          bevelSize: 0,
+          bevelOffset: 0,
+          bevelSegments: 15,
+          bevelEnabled: false
+        });
+        textGeo.computeBoundingBox();
+        textGeo.computeVertexNormals();
+        text = new THREE.Mesh(textGeo, cubeMat);
+        // text.position.x = -textGeo.boundingBox.max.x / 2 + Math.random() ;
+        // text.position.y = -textGeo.boundingBox.max.x / 2 + Math.random() ;
+        // text.position.z = -textGeo.boundingBox.max.x / 2 + Math.random() ;
+
+        text.position.x = -5  ;
+        text.position.y = 1+(-2*i) ;
+        // text.position.x = Math.random() * -5 ;
+        // text.position.y = Math.random() * -5 ;
+        // text.position.z = Math.random() * 5 ;
+
+        text.castShadow = true;
+        scene.add(text);
+    
+      }
+    );
+    
+  }
+
+
+  // Divs
+  //get all divs
+  for (let i = 0; i < allDiv.length; i++) {
+    //get children in each array
+    for (let a = 0; a < allDiv[i].children.length; a++) {
+      let nodeName = allDiv[i].children[a].nodeName;
+      
+      if (nodeName == "P") {
+        let pText = allDiv[i].children[a].innerText;
+        //create text
+        let loader = new THREE.FontLoader();
+        loader.load(
+          "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/fonts/gentilis_regular.typeface.json",
+          function(font) {
+            let textGeo = new THREE.TextGeometry(pText, {
+              font: font,
+              size: 1,
+              height: 0.003,
+              curveSegments: 10,
+              // bevelEnabled: false,
+              bevelThickness: 1,
+              bevelSize: 0,
+              bevelOffset: 0,
+              bevelSegments: 15,
+              bevelEnabled: false
+            });
+            textGeo.computeBoundingBox();
+            textGeo.computeVertexNormals();
+            text = new THREE.Mesh(textGeo, cubeMat);
+            // text.position.x = -textGeo.boundingBox.max.x / 2 + Math.random() ;
+            // text.position.y = -textGeo.boundingBox.max.x / 2 + Math.random() ;
+            // text.position.z = -textGeo.boundingBox.max.x / 2 + Math.random() ;
+
+            text.position.x = -5  ;
+            text.position.y = -3+(-2*i) ;
+            // text.position.x = Math.random() * -5 ;
+            // text.position.y = Math.random() * -5 ;
+            // text.position.z = Math.random() * 5 ;
+
+            text.castShadow = true;
+            scene.add(text);
+        
+          }
+        );
+
+      }
+
+      //if it is image in div
+      if (nodeName == "IMG") {
+        // console.log(allDiv[i].children[a].currentSrc);
+        let imgUrl = allDiv[i].children[a].currentSrc;
+
+        const divImgGeometry = new THREE.PlaneGeometry( 5, 5 );
+        const divImgMaterial = new THREE.MeshBasicMaterial();
+        let divImgLoader = new THREE.TextureLoader();
+        divImgLoader.load( imgUrl, 
+          function ( divImgTexture ) {    
+            divImgMaterial.map = divImgTexture;
+            // console.log(divImgMaterial.map);
+            divImgMaterial.needsUpdate = true;
+          });
+        
+        const divImgPlane = new THREE.Mesh( divImgGeometry, divImgMaterial );
+        divImgPlane.position.x = Math.random() * -5 ;
+        divImgPlane.position.y = Math.random() * -5 ;
+        divImgPlane.position.z = Math.random() * -5 ;
+        scene.add( divImgPlane );
+
+
+
+
+
+      }
+
+      
+      
+    }
   }
 
 
@@ -132,10 +264,10 @@ changeBtn.onclick = function(){
   // for (let i = 0; i < allElement.length; i++) {
     
     
-    // if allElement[i] = 
+  //   if allElement[i] = 
 
-    // allElement[i].style.display = "none";
-    // console.log(allElement[3]);
+  //   allElement[i].style.display = "none";
+  //   console.log(allElement[3]);
     
   // }
 
@@ -147,6 +279,7 @@ changeBtn.onclick = function(){
 
 
 function init() {
+  // console.log(allElement);
 
 
     container = document.createElement( 'div' );

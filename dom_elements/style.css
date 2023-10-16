@@ -39,6 +39,16 @@ body{
     padding-inline: 0px;
 }
 
+#changeBtn {
+    position: relative;
+    top:0px;
+
+    width: 10%;
+    height: 100%;
+    padding-block: 0px;
+    padding-inline: 0px;
+}
+
 iframe {
     width: 40%;
     height:80%;
