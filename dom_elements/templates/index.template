@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Dom Elememts</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="style.css">
+              </head>
+
+
+	<body>
+                <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/104/three.min.js'></script></script>
+        
+        <div id="topBar">
+                <!-- The Search -->
+                <div class="example" id="searchBar">
+                        <!-- <form class="example" action="action_page.php" id="searchBar"> -->
+                                <input type="text" placeholder="Search.." name="search" id="searchText">
+                                <button type="submit" id="changeBtn"><i class="fa fa-search"></i></button>
+                        <!-- </form> -->
+                </div>
+                        <!-- <button id="changeBtn">Try it</button> -->
+                        <!-- <iframe src="/dom_elements/basic_web/basic.html" title="basic web" id="iframe1"></iframe> -->
+
+
+                        <!-- change the URL for your website after name= on the next line -->
+                        <iframe src="http://localhost:12345/getdata?name=https://example.com/" title="basic web" id="iframe1"></iframe>
+                        
+        </div>
+
+        <div id="bottomSection">
+
+        </div>
+
+
+        <!-- <script type="module" src="script.js"></script> -->
+        <script type="module" src="script1.js"></script>
+
+
+	</body>
+</html>
