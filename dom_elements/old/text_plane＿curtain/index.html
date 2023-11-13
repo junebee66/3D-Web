@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>TextPlane</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./script.js"></script>
+
+</head>
+<body>
+
+    
+    
+<div id="canvas"></div>
+<div id="content">
+    <h1>
+        <span class="text-plane">Martin Laxenaire</span>
+    </h1>
+
+    <h2>
+        <span class="text-plane">
+            Rendering text<br />
+            to WebGL
+        </span>
+    </h2>
+
+    <div id="process" class="text-block">
+        <p>
+            <span class="text-plane">
+                This is an example of how we can render whole blocks of text to WebGL thanks to curtains.js and the TextTexture class.
+            </span>
+        </p>
+        <p>
+            <span class="text-plane">
+                A WebGL plane is created for all elements that have a "text-plane" class and their text contents are drawn inside a 2D canvas, which is then used as a WebGL texture.
+            </span>
+        </p>
+    </div>
+
+    <div id="scroll" class="text-block">
+        <p>
+            <span class="text-plane">
+                We're using an additional shader pass to add a cool effect on scroll that makes you feel like the content is actually dragged.
+            </span>
+        </p>
+        <p>
+            <span class="text-plane">
+                Try to scroll down to see what happens!
+            </span>
+        </p>
+    </div>
+
+    <div id="lipsum" class="text-block">
+        <p>
+            <span class="text-plane">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a dolor posuere nisi tempus rhoncus. Curabitur venenatis velit a tellus porttitor, sed efficitur ipsum volutpat. Nunc ante ante, convallis in commodo eget, semper ac ex. Fusce lobortis risus vel nisl interdum imperdiet. Nulla facilisi
+            </span>
+        </p>
+        <p>
+            <span class="text-plane">
+                Cras hendrerit iaculis est at vestibulum. Integer tincidunt mi id metus mollis, in fermentum odio sagittis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus in efficitur diam.
+            </span>
+        </p>
+    </div>
+</div>
+</body>
+</html>

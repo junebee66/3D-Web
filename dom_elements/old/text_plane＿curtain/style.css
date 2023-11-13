@@ -1,0 +1,70 @@
+body {
+    margin: 0;
+    width: 100%;
+    min-height: 100vh;
+    font-family: 'Merriweather Sans', sans-serif;
+    line-height: 1.2;
+    color: #0505AF;
+    font-size: 2vw;
+}
+
+#canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+}
+
+.text-plane {
+    display: inline-block;
+
+    /* apply negative margins and padding to avoid chars from being cropped */
+    margin: -1em;
+    padding: 1em;
+
+    /* hide the original text content */
+    opacity: 0;
+}
+
+#content {
+    width: 100%;
+    padding: 2.5vw;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+}
+
+#content h1 {
+    text-align: center;
+    margin: 25vh 0;
+    font-size: 6vw;
+    text-transform: uppercase;
+    font-family: 'Archivo Black', sans-serif;
+    font-weight: 400;
+    line-height: 1;
+}
+
+#content h2 {
+    width: 50%;
+    margin: 15vh 0 15vh 50%;
+    font-size: 4vw;
+    text-transform: uppercase;
+    font-family: 'Archivo Black', sans-serif;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.text-block {
+    width: 50%;
+    margin: 15vh 0;
+}
+
+#scroll {
+    margin-left: 25%;
+}
+
+#lipsum {
+    margin-left: 50%;
+}

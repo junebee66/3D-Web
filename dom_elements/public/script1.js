@@ -4,8 +4,13 @@ import {AnaglyphEffect} from 'https://cdn.skypack.dev/three@0.128.0/examples/jsm
 import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/controls/OrbitControls.js';
 import {OBJLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/OBJLoader.js';
 import {MTLLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/MTLLoader.js';
+import {Curtains, Plane, RenderTarget, ShaderPass} from 'https://cdn.jsdelivr.net/npm/curtainsjs@8.1.2/src/index.mjs';
+import {TextTexture} from 'https://gistcdn.githack.com/martinlaxenaire/549b3b01ff4bd9d29ce957edd8b56f16/raw/2f111abf99c8dc63499e894af080c198755d1b7a/TextTexture.js';
 
 
+
+//When updating information in this code, I have to stop the localhost:12345 in the terminal with ctrl + c 
+//and then run "node index.js" again, then reload the http://localhost:12345/ page to see changes
 
 
 /*
@@ -48,6 +53,7 @@ let mouseY = 0;
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 let ratio = 20
+let textRatio = 50;
 let canvasLeft = -15;
 let canvasTop = 15;
   
@@ -80,10 +86,27 @@ animate();
 
 //loop all iframe elements to change
 changeBtn.onclick = function(){
-    // iframe1.contentWindow.postMessage("Hello from parent", "https://discoverthreejs.com");
-    let iframe1 = document.getElementById("iframe1");
+
+  //clean previous 3d objects in the scene
+  while (scene.children.length > 0) {
+    const child = scene.children[0];
+    scene.remove(child);
+}
+
+  // update iframe url to input box link
+  const searchText = document.getElementById("searchText");
+  const iframe1 = document.getElementById("iframe1");
+
+      // Get the value from the input box
+      const newUrl = searchText.value;
+
+      // Update the iframe src attribute with the new URL
+      iframe1.src = `http://localhost:12345/getdata?name=${newUrl}`;
+
+
+    
+    // let iframe1 = document.getElementById("iframe1");
     let allElements = iframe1.contentWindow.document.querySelector("body").children;
-  console.log(iframe1.contentWindow.document.querySelector('body').children);
 
   let geometry = new THREE.SphereBufferGeometry( 0.1, 32, 16 );
   let material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
@@ -91,12 +114,12 @@ changeBtn.onclick = function(){
   // get the size of the actual iframe container
   let iframeBody = iframe1.contentWindow.document.querySelector("body");
   let bodyRect = iframeBody.getBoundingClientRect();
-   console.log("BODY RECT:");
-   console.log(bodyRect);
+  //  console.log("BODY RECT:");
+  //  console.log(bodyRect);
 
   for (let i = 0; i < allElements.length; i++) {
-    console.log("allElements", allElements[i]);
-    console.log("allElements[].nodeName", allElements[i].nodeName);
+    // console.log("allElements", allElements[i]);
+    // console.log("allElements[].nodeName", allElements[i].nodeName);
     let nodeName = allElements[i].nodeName;
     let pText = allElements[i].innerText;
     let imgUrl = allElements[i].currentSrc;
@@ -112,7 +135,7 @@ changeBtn.onclick = function(){
     const allElCSS = window.getComputedStyle(allElements[i], null);
     // // let bgColorH1 = cssObjH1.getPropertyValue("background-color");
 
-    let allElFontSize = parseFloat(allElCSS.fontSize.replace('px', '')) / 50;
+    let allElFontSize = parseFloat(allElCSS.fontSize.replace('px', '')) / textRatio;
 
     let components = allElCSS.color.split(", ");
     components[1] = parseInt(components[1]);
@@ -158,19 +181,54 @@ changeBtn.onclick = function(){
             let divPText = allElements[i].children[a].innerText;
             let divArrayNum = i;
             let divImgUrl = allElements[i].children[a].currentSrc;
-            let divImgPos = allElements[i].children[a].getBoundingClientRect();
+            let divPos = allElements[i].children[a].getBoundingClientRect();
+            
+
+            console.log(divPos);
+            const divElCSS = window.getComputedStyle(allElements[i].children[a], null);
+            // // let bgColorH1 = cssObjH1.getPropertyValue("background-color");
+        
+            let divElFontSize = parseFloat(divElCSS.fontSize.replace('px', '')) / 50;
+        
+            let components = divElCSS.color.split(", ");
+            components[1] = parseInt(components[1]);
+            components[0] = parseInt(components[0].split('(')[1]);
+            components[2] = parseInt(components[2].split(')')[0]);
+            let hexColorCode = rgbToHex(components[0], components[1], components[2]);
+        
+            // // create a unique material for this entity
+            let textMaterial = new THREE.MeshLambertMaterial({ color: hexColorCode });
+
+
             let insideDiv = "INSIDE div!"
           //   console.log("allElements[i].children[a].nodeName", allElements[i].children[a].nodeName);
             // console.log("🔴 image inside div pos", allElements[6].children[0].getBoundingClientRect());
       
         //   console.log("image outside x", allElements[6].getBoundingClientRect());
-            if (divNodeName == "P") {
-                createText(divPText, divArrayNum, divImgPos, allElFontSize, textMaterial, insideDiv);
-                // console.log("print div p");
+            
+        if (divNodeName == "H1") {
+          createPlaneText(divPText, divPos, allElFontSize);
+          // createText(divPText, arrayNum, divPos, divElFontSize, textMaterial, insideDiv);
+          // let divPTextF = window.getComputedStyle(allElements[i].children[0], null);
+          // console.log("🟡h1 inside div", divPTextF);
+        }
+      
+      if (divNodeName == "H2") {
+          // createText(pText, arrayNum);
+          createPlaneText(divPText, divPos, allElFontSize);
+          // createText(divPText, arrayNum, divPos, divElFontSize, textMaterial, insideDiv);
+          console.log("printed div h2!");
+      }
+        
+        if (divNodeName == "P") {
+                // createText(divPText, divArrayNum, divPos, divElFontSize, textMaterial, insideDiv);
+                createPlaneText(divPText, divPos, allElFontSize);
+                // createPlaneText(divPText, divPos, allElFontSize);
+                console.log("print div p");
             }
 
             if (divNodeName == "IMG") {
-                createImage(divArrayNum, divImgUrl, divImgPos, insideDiv);
+                createImage(divArrayNum, divImgUrl, divPos, insideDiv);
                 console.log("print div image");
             }
     }
@@ -222,6 +280,8 @@ function createText(pText, arrayNum, allElementsPos, allElFontSize, textMaterial
 
             text.castShadow = true;
             scene.add(text);
+
+            scene.add( new THREE.GridHelper(10, 10) );
         
           }
         );
@@ -266,10 +326,6 @@ function createImage(arrayNum, imgUrl, imgPos, insideDiv){
         let secondT = canvasTop - ImgHHalf;
         ImgPlane.position.y = secondT - ImgTop;
 
-        console.log(ImgPlane);
-        // ImgPlane.width = 10;
-        
-
         // ImgPlane.position.x = canvasLeft + imgPos.left /ratio;
         // ImgPlane.position.y = canvasLeft - (imgPos.top /ratio); // has make the top number negative sign bc in threejs the higher the number is the higher it is in position
         ImgPlane.position.z = -1;
@@ -282,6 +338,7 @@ function createImage(arrayNum, imgUrl, imgPos, insideDiv){
         scene.add( ImgPlane );
 
 
+        //debug origin cube
         const geometry = new THREE.BoxGeometry( 0.1*(arrayNum+1), 0.1*(arrayNum+1), 0.1*(arrayNum+1) ); 
         const material = new THREE.MeshBasicMaterial( {color: 0xD70040} ); 
         const cube = new THREE.Mesh( geometry, material ); 
@@ -303,7 +360,7 @@ function init() {
 
 
     camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.01, 100 );
-    camera.position.z = 3;
+    camera.position.z = 40;
     camera.focalLength = 3;
 
     const controls = new OrbitControls(camera, leftC);
@@ -569,3 +626,133 @@ function performFetch(args) {
 
 
 
+
+
+
+
+
+function createPlaneText(text, imgPos, fontSize){
+  console.log(imgPos.width);
+  let ImgWidth = imgPos.width;
+  let ImgHeight = imgPos.height;
+  let ImgResizeW = ImgWidth/ratio;
+  let ImgResizeH = ImgHeight/ratio;
+  let ImgLoader = new THREE.TextureLoader();
+  let ImgWHalf = ImgResizeW/2;
+  let ImgHHalf = ImgResizeH/2;
+
+  let ImgLeft = imgPos.left / ratio;
+  let ImgTop = imgPos.top / ratio;
+
+  const canObj1 = TextPlane.createCanObj({
+    rows: 152, size: ImgWidth,
+    palette: ['rgba(0,0,0,0)', 'black', 'black']
+  });
+  console.log("fontsize" + canObj1.size);
+  // canvas object 2 will use the 'rnd' built in draw method
+  // as a way to create a background a little more interesting
+  // than just a static background
+  let canObj2 = canvasMod.create({
+    draw: 'rnd',
+    size: ImgWidth,
+    update_mode: 'canvas',
+    state: {
+        gSize: 16
+    },
+    // palette: ['red', 'lime', 'cyan', 'purple', 'orange', 'green', 'blue']
+    palette: ['white', 'white', 'white', 'white', 'white', 'white', 'white']
+  });
+  // canvas object 3 will be the final background use for the material
+  let canObj3 = canvasMod.create({
+    draw: function(canObj, ctx, canvas, state){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.globalAlpha = 0.3;
+        ctx.drawImage(canObj2.canvas, 0, 0);
+        ctx.globalAlpha = 1;
+        ctx.save();
+        ctx.translate(128, 128);
+        let d = state.rStart + state.rDelta * state.rAlpha;
+        ctx.rotate(Math.PI / 180 * d);
+        ctx.drawImage(canObj1.canvas, -128, -128);
+        ctx.restore();
+    },
+    size: ImgWidth,
+    update_mode: 'canvas',
+    state: {
+        rStart: -90,
+        rDelta: 180,
+        rAlpha: 100
+    },
+    palette: ['blue', 'white']
+  });
+  //-------- ----------
+  // MESH
+  //-------- ----------
+  const mesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(ImgWidth/ratio, ImgHeight/ratio),
+    new THREE.MeshBasicMaterial({
+        map: canObj3.texture,
+        transparent: true
+    })
+  );
+
+  //making the image origin to the left border
+
+
+  let secondL = canvasLeft + ImgWHalf;// + (firstL /ratio);
+  mesh.position.x = secondL + ImgLeft;
+
+  let secondT = canvasTop - ImgHHalf;
+  mesh.position.y = secondT - ImgTop;
+  console.log("here");
+  
+  // mesh.position.set(0, 1, 0);
+  // mesh.position.x = canvasLeft + (tpPos.left/ratio);
+  // mesh.position.y = canvasTop - (tpPos.top/ratio);
+  mesh.position.z = 0;
+  scene.add(mesh);
+  //-------- ----------
+  // TEXT and textLines
+  //-------- ----------
+  const text2 = text;
+  const textLines = TextPlane.createTextLines(text2, 22);
+  // ---------- ----------
+  // ANIMATION LOOP
+  // ---------- ----------
+  const FPS_UPDATE = 20, // fps rate to update ( low fps for low CPU use, but choppy video )
+  FPS_MOVEMENT = 30;     // fps rate to move object by that is independent of frame update rate
+  // FRAME_MAX = 600;
+  let secs = 0,
+  frame = 0,
+  lt = new Date();
+  // update
+  const update = function(frame, frameMax){
+    let a = frame / frameMax;
+    let b = 0.5;
+    // UPDATE
+    TextPlane.moveTextLines(canObj1.state.lines, textLines, 0, 0, 20);
+    // update canvas
+    canvasMod.update(canObj1);
+    //canvasMod.update(canObj2); // background can be animated or static
+    canObj3.state.rAlpha = b;
+    canvasMod.update(canObj3);
+  };
+  // loop
+  const loop = () => {
+    const now = new Date(),
+    secs = (now - lt) / 1000;
+    requestAnimationFrame(loop);
+    if(secs > 1 / FPS_UPDATE){
+        // update, render
+        update( Math.floor(frame), 600);
+        // update( Math.floor(frame), FRAME_MAX);
+        renderer.render(scene, camera);
+        // step frame
+        // frame += FPS_MOVEMENT * secs;
+        // frame %= FRAME_MAX;
+        // lt = now;
+    }
+  };
+  loop();
+  
+}
