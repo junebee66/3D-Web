@@ -11,11 +11,7 @@
 
 
 	<body>
-                <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/104/three.min.js'></script></script>
-                <script src="three.min.js"></script>
-                <script src="canvas-r1.js"></script>
-                <script src="text-plane-r0.js"></script>
-		
+
                 <script type="importmap">
 			{
 				"imports": {
@@ -24,6 +20,11 @@
 				}
 			}
 		</script>
+                
+                <script src="three.min.js"></script>
+                <script src="canvas-r1.js"></script>
+                <script src="text-plane-r0.js"></script>
+		
 
                         
         <div id="topBar">

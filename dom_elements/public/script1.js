@@ -1,9 +1,11 @@
-import * as THREE from 'https://cdn.skypack.dev/three@0.128.0/build/three.module.js';
+import * as THREE from 'https://cdn.skypack.dev/three@0.137.1/build/three.module.js';
 
+// import { CSS3DRenderer, CSS3DObject } from 'https://cdn.skypack.dev/three@0.137.1/examples/jsm/renderers/CSS3DRenderer.js';
+import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 import {AnaglyphEffect} from 'https://cdn.skypack.dev/three@0.128.0/examples/jsm/effects/AnaglyphEffect.js';
 import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/controls/OrbitControls.js';
-import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
-// import { CSS3DRenderer, CSS3DObject } from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/renderers/CSS3DRenderer.js';
+
+
 
 // import {OBJLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/OBJLoader.js';
 // import {MTLLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/MTLLoader.js';
@@ -44,7 +46,7 @@ let changeBtn = document.getElementById('changeBtn');
 let text = false;
 let cubeMat = new THREE.MeshLambertMaterial({ color: 0xff3300 });
 
-let container, camera, scene, renderer, cssRenderer, effect, leftC;
+let container, camera, scene, renderer, renderer2, cssRenderer, effect, leftC;
 
 // const loader;
 const spheres = [];
