@@ -43,7 +43,7 @@
                 <div id="cssRender"></div>
                 <div id="webglRender"></div>
 
-        <script type="module" src="script1.js"></script>
+        <script type="module" src="script-original.js"></script>
 
 
 	</body>

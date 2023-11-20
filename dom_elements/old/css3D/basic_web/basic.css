@@ -1,0 +1,19 @@
+#imgText{
+    display:flex;
+}
+
+#text{
+    width:50%;
+}
+
+h1{
+    font-size: 70;
+}
+
+
+
+#forestImg{
+    width:50%;
+    height:100%;
+
+}

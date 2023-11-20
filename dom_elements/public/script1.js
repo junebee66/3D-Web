@@ -123,7 +123,7 @@ changeBtn.onclick = function create3D(){
   let iframeBody = iframe1.contentWindow.document.querySelector("body");
   let bodyRect = iframeBody.getBoundingClientRect();
   //  console.log("BODY RECT:");
-  //  console.log(bodyRect);
+   
 
   
   for (let i = 0; i < allElements.length; i++) {
@@ -282,7 +282,7 @@ function createText(pText, arrayNum, allElementsPos, allElFontSize, textMaterial
             text.position.x = canvasLeft + allElementsPos.left /ratio;
             text.position.y = canvasTop - allElementsPos.top /ratio;
             // console.log("text.x", text.position.x);
-            console.log("💬", insideDiv, " '", pText, "' ","'s x position after algorithm is", text.position.x);
+            // console.log("💬", insideDiv, " '", pText, "' ","'s x position after algorithm is", text.position.x);
 
 
             const geometry = new THREE.BoxGeometry( 0.1*(arrayNum+1), 0.1*(arrayNum+1), 0.1*(arrayNum+1) ); 
@@ -309,8 +309,8 @@ function createImage(arrayNum, imgUrl, imgPos, insideDiv){
         let ImgLoader = new THREE.TextureLoader();
         let ImgWHalf = ImgResizeW/2;
         let ImgHHalf = ImgResizeH/2;
-        console.log("🔴IMG POS")
-        console.log(imgPos);
+        // console.log("🔴IMG POS")
+        // console.log(imgPos);
 
         let ImgLeft = imgPos.left / ratio;
         let ImgTop = imgPos.top / ratio;
@@ -327,8 +327,8 @@ function createImage(arrayNum, imgUrl, imgPos, insideDiv){
           });
         
         const ImgPlane = new THREE.Mesh( ImgGeometry, ImgMaterial );
-        console.log("🖼️",insideDiv,"image all pos before algorithm is", imgPos);
-        console.log("🖼️",insideDiv,"image left pos before algorithm is", imgPos.left);
+        // console.log("🖼️",insideDiv,"image all pos before algorithm is", imgPos);
+        // console.log("🖼️",insideDiv,"image left pos before algorithm is", imgPos.left);
         
 
         //making the image origin to the left border
@@ -343,7 +343,7 @@ function createImage(arrayNum, imgUrl, imgPos, insideDiv){
         // ImgPlane.position.x = canvasLeft + imgPos.left /ratio;
         // ImgPlane.position.y = canvasLeft - (imgPos.top /ratio); // has make the top number negative sign bc in threejs the higher the number is the higher it is in position
         ImgPlane.position.z = -1;
-        console.log("🖼️", insideDiv,"image x after algorithm is",ImgPlane.position.x);
+        // console.log("🖼️", insideDiv,"image x after algorithm is",ImgPlane.position.x);
         // console.log("imgPlane Height", allElementsPos.height);
         // ImgPlane.position.x = Math.random() * -35 +arrayNum;
         // ImgPlane.position.y = Math.random() * -5 +arrayNum;
@@ -363,7 +363,7 @@ function createImage(arrayNum, imgUrl, imgPos, insideDiv){
 }
 
 function createPlaneText(text, imgPos, fontSize){
-  console.log(imgPos.width);
+  // console.log(imgPos.width);
   let ImgWidth = imgPos.width;
   let ImgHeight = imgPos.height;
   let ImgResizeW = ImgWidth/ratio;

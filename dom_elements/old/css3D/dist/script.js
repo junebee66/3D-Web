@@ -1,6 +1,15 @@
-var camera, root, scene, renderer, renderer2, background;
+var camera, root, scene, testobj, renderer, renderer2, background;
 var sphere;
 var light;
+
+// for whatever 
+const iframe1 = document.getElementById("iframe1");
+const test = document.getElementById("test");
+
+let allElements = iframe1.contentWindow.document.querySelector("body").children;
+
+let iframeBody = iframe1.contentWindow.document.querySelector("body");
+let bodyRect = iframeBody.getBoundingClientRect();
 
 init();
 animate(performance.now());
@@ -12,7 +21,18 @@ function init() {
   root.rotation.y = Math.PI / 3;
   scene.add(root);
 
-  background = makeElementObject('div', 200, 200);
+  console.log(iframe1);
+  
+
+  testobj = makeElementObject(test, 200, 200);
+  root.add(testobj);
+
+
+  for (let i = 0; i < allElements.length; i++) {
+
+  console.log(allElements[0]);
+
+  background = makeElementObject(allElements[i], 200, 200);
   background.css3dObject.element.textContent = "I am a <div> element intersecting a WebGL sphere.\n\nThis text is editable!";
   background.css3dObject.element.setAttribute('contenteditable', '');
   background.position.z = 20;
@@ -27,17 +47,10 @@ function init() {
         ${color2} 10px,
         ${color2} 20px
     )`;
-
   root.add(background);
 
-  const button = makeElementObject('button', 75, 20);
-  button.css3dObject.element.style.border = '2px solid #fa5a85';
-  button.css3dObject.element.textContent = "Click me!";
-  button.css3dObject.element.addEventListener('click', () => alert('You clicked a <button> element in the DOM!'));
-  button.position.y = 10;
-  button.position.z = 10;
-  button.css3dObject.element.style.background = '#e64e77';
-  background.add(button);
+  }
+
 
   // make a geometry that we will clip with the DOM elememt.
   ~function () {
@@ -114,6 +127,7 @@ function init() {
 
   window.addEventListener('resize', resize);
   resize();
+
 }
 
 function resize() {
@@ -130,8 +144,9 @@ function animate(time) {
 
   light.position.x = 30 * Math.sin(time * 0.003) + 30;
   light.position.y = 40 * Math.cos(time * 0.001) - 20;
-  background.rotation.y = Math.PI / 8 * Math.cos(time * 0.001) - Math.PI / 6;
-  background.rotation.x = Math.PI / 10 * Math.sin(time * 0.001) - Math.PI / 10;
+  testobj.rotation.y = Math.PI / 8 * Math.cos(time * 0.001) - Math.PI / 6;
+  // background.rotation.y = Math.PI / 8 * Math.cos(time * 0.001) - Math.PI / 6;
+  // background.rotation.x = Math.PI / 10 * Math.sin(time * 0.001) - Math.PI / 10;
   sphere.rotation.x += 0.005;
   sphere.rotation.y += 0.005;
 
@@ -143,11 +158,11 @@ function animate(time) {
   requestAnimationFrame(animate);
 }
 
-function makeElementObject(type, width, height) {
+function makeElementObject(element, width, height) {
+  // console.log("make3d object" + element);
   const obj = new THREE.Object3D();
+  const innerText = element.innerHTML;
 
-  const element = document.createElement(type);
-  // console.log(element);
   element.style.width = width + 'px';
   element.style.height = height + 'px';
   element.style.opacity = 0.999;
@@ -158,6 +173,9 @@ function makeElementObject(type, width, height) {
   obj.add(css3dObject);
 
   // console.log(obj);
+
+
+
 
   // make an invisible plane for the DOM element to chop
   // clip a WebGL geometry with it.
@@ -173,6 +191,21 @@ function makeElementObject(type, width, height) {
   mesh.receiveShadow = true;
   obj.lightShadowMesh = mesh;
   obj.add(mesh);
+
+  obj.css3dObject.element.textContent = innerText;
+  obj.css3dObject.element.setAttribute('contenteditable', '');
+  obj.position.z = 20;
+  obj.css3dObject.element.style.opacity = "1";
+  obj.css3dObject.element.style.padding = '10px';
+  const color1 = '#7bb38d';
+  const color2 = '#71a381';
+  obj.css3dObject.element.style.background = `repeating-linear-gradient(
+        45deg,
+        ${color1},
+        ${color1} 10px,
+        ${color2} 10px,
+        ${color2} 20px
+    )`;
 
   return obj;
 }

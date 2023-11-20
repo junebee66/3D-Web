@@ -117,6 +117,9 @@ changeBtn.onclick = function(){
   //  console.log("BODY RECT:");
   //  console.log(bodyRect);
 
+  console.log(iframe1);
+  console.log(allElements);
+
   for (let i = 0; i < allElements.length; i++) {
 
     if (allElements[i].tagName == 'SCRIPT') {
