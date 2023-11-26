@@ -1,52 +1,23 @@
-import * as THREE from 'https://cdn.skypack.dev/three@0.137.1/build/three.module.js';
+import * as THREE from 'https://cdn.skypack.dev/three@0.128.0/build/three.module.js';
 
-// import { CSS3DRenderer, CSS3DObject } from 'https://cdn.skypack.dev/three@0.137.1/examples/jsm/renderers/CSS3DRenderer.js';
-import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+import TWEEN from 'three/addons/libs/tween.module.js';
 import {AnaglyphEffect} from 'https://cdn.skypack.dev/three@0.128.0/examples/jsm/effects/AnaglyphEffect.js';
-import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/controls/OrbitControls.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 
 
-
-// import {OBJLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/OBJLoader.js';
-// import {MTLLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/MTLLoader.js';
-// import {Curtains, Plane, RenderTarget, ShaderPass} from 'https://cdn.jsdelivr.net/npm/curtainsjs@8.1.2/src/index.mjs';
-// import {TextTexture} from 'https://gistcdn.githack.com/martinlaxenaire/549b3b01ff4bd9d29ce957edd8b56f16/raw/2f111abf99c8dc63499e894af080c198755d1b7a/TextTexture.js';
-
-
-
-//When updating information in this code, I have to stop the localhost:12345 in the terminal with ctrl + c 
-//and then run "node index.js" again, then reload the http://localhost:12345/ page to see changes
-
-
-/*
-// demo usage -- contact a script using the 'GET' method
-performFetch({
-  url: 'http://localhost:12345/getdata',
-  method: 'get',
-  data: {
-      name: 'https://cims.nyu.edu/~kapp/june/test.html'
-  },
-  success: function(data) {
-      console.log("success GET:", data);
-  },
-  error: function(error) {
-      console.log("error GET:", error);
-  }
-});*/
-
-
-
-
+//problem:
+//couldn't find where the CSS3Dobject is in the 3d environment
+// even though it is created
 
 //accessing iframe elements
 let changeBtn = document.getElementById('changeBtn');
-
 
 //3D text
 let text = false;
 let cubeMat = new THREE.MeshLambertMaterial({ color: 0xff3300 });
 
-let container, camera, scene, renderer, renderer2, cssRenderer, effect, leftC;
+let container, camera, scene, renderer, renderer2, cssRenderer, effect, leftC, root;
 
 // const loader;
 const spheres = [];
@@ -73,7 +44,6 @@ const rgbToHex = (r, g, b) => {
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
-
 //background image
 const path = "https://threejs.org/examples/textures/cube/pisa/";
 const format = '.png';
@@ -89,409 +59,20 @@ const textureCube = new THREE.CubeTextureLoader().load( urls );
 init();
 animate();
 
-//loop all iframe elements to change
-changeBtn.onclick = function create3D(){
-
-  //clean previous 3d objects in the scene
-  while (scene.children.length > 0) {
-    const child = scene.children[0];
-    scene.remove(child);
-}
-
-  // update iframe url to input box link
-  const searchText = document.getElementById("searchText");
-  const iframe1 = document.getElementById("iframe1");
-  // const tagsToSkip = {
-  //   'BODY': true,
-  // }
-
-      // Get the value from the input box
-      const newUrl = searchText.value;
-
-      // Update the iframe src attribute with the new URL
-      iframe1.src = `http://localhost:12345/getdata?name=${newUrl}`;
-
-
-    
-    // let iframe1 = document.getElementById("iframe1");
-    let allElements = iframe1.contentWindow.document.querySelector("body").children;
-
-  let geometry = new THREE.SphereBufferGeometry( 0.1, 32, 16 );
-  let material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
-
-  // get the size of the actual iframe container
-  let iframeBody = iframe1.contentWindow.document.querySelector("body");
-  let bodyRect = iframeBody.getBoundingClientRect();
-  //  console.log("BODY RECT:");
-   
-
-  
-  for (let i = 0; i < allElements.length; i++) {
-
-    if (allElements[i].tagName == 'SCRIPT') {
-      continue;
-    }
-
-    let nodeName = allElements[i].nodeName;
-    let pText = allElements[i].innerText;
-    let imgUrl = allElements[i].currentSrc;
-    let arrayNum = i;
-
-
-    //Text Position and Color Setup 
-    let allElementsPos = allElements[i].getBoundingClientRect();
-  
-
-    const allElCSS = window.getComputedStyle(allElements[i], null);
-    // // let bgColorH1 = cssObjH1.getPropertyValue("background-color");
-
-    let allElFontSize = parseFloat(allElCSS.fontSize.replace('px', '')) / textRatio;
-
-    let components = allElCSS.color.split(", ");
-    components[1] = parseInt(components[1]);
-    components[0] = parseInt(components[0].split('(')[1]);
-    components[2] = parseInt(components[2].split(')')[0]);
-    let hexColorCode = rgbToHex(components[0], components[1], components[2]);
-
-    // // create a unique material for this entity
-    let textMaterial = new THREE.MeshLambertMaterial({ color: hexColorCode });
-
-    let insideDiv = "OUTSIDE div..."
-
-
-    if (nodeName == "P") {
-        createText(pText, arrayNum, allElementsPos, allElFontSize,textMaterial, insideDiv);
-        // console.log("printed p!");
-    }
-
-    if (nodeName == "H1") {
-        const H1Object = new THREE.Object3D();
-        H1Object.position.x = 5 + allElementsPos.left /ratio;
-        H1Object.position.y = 5 + allElementsPos.top /ratio;
-
-        // createText(pText, arrayNum, allElementsPos, allElFontSize, textMaterial, insideDiv);
-    }
-    
-    if (nodeName == "H2") {
-        // createText(pText, arrayNum);
-        createText(pText, arrayNum, allElementsPos, allElFontSize, textMaterial, insideDiv);
-        console.log("printed h2!");
-    }
- 
-    if (nodeName == "IMG") {
-        createImage(arrayNum, imgUrl, allElementsPos, insideDiv);
-        // console.log(allElementsPos);
-    }
-
-
-
-
-
-    //get all divs
-    // if(allElements[i].nodeName == "DIV"){
-    //     //get children in each array
-    //     for (let a = 0; a < allElements[i].children.length; a++) {
-    //         let divNodeName = allElements[i].children[a].nodeName;
-    //         let divPText = allElements[i].children[a].innerText;
-    //         let divArrayNum = i;
-    //         let divImgUrl = allElements[i].children[a].currentSrc;
-    //         let divPos = allElements[i].children[a].getBoundingClientRect();
-            
-
-    //         console.log(divPos);
-    //         const divElCSS = window.getComputedStyle(allElements[i].children[a], null);
-    //         // // let bgColorH1 = cssObjH1.getPropertyValue("background-color");
-        
-    //         let divElFontSize = parseFloat(divElCSS.fontSize.replace('px', '')) / 50;
-        
-    //         let components = divElCSS.color.split(", ");
-    //         components[1] = parseInt(components[1]);
-    //         components[0] = parseInt(components[0].split('(')[1]);
-    //         components[2] = parseInt(components[2].split(')')[0]);
-    //         let hexColorCode = rgbToHex(components[0], components[1], components[2]);
-        
-    //         // // create a unique material for this entity
-    //         let textMaterial = new THREE.MeshLambertMaterial({ color: hexColorCode });
-
-
-    //         let insideDiv = "INSIDE div!"
-    //       //   console.log("allElements[i].children[a].nodeName", allElements[i].children[a].nodeName);
-    //         // console.log("🔴 image inside div pos", allElements[6].children[0].getBoundingClientRect());
-      
-    //     //   console.log("image outside x", allElements[6].getBoundingClientRect());
-            
-    //     if (divNodeName == "H1") {
-    //       createPlaneText(divPText, divPos, allElFontSize);
-    //       // createText(divPText, arrayNum, divPos, divElFontSize, textMaterial, insideDiv);
-    //       // let divPTextF = window.getComputedStyle(allElements[i].children[0], null);
-    //       // console.log("🟡h1 inside div", divPTextF);
-    //     }
-      
-    //   if (divNodeName == "H2") {
-    //       // createText(pText, arrayNum);
-    //       createPlaneText(divPText, divPos, allElFontSize);
-    //       // createText(divPText, arrayNum, divPos, divElFontSize, textMaterial, insideDiv);
-    //       console.log("printed div h2!");
-    //   }
-        
-    //     if (divNodeName == "P") {
-    //             // createText(divPText, divArrayNum, divPos, divElFontSize, textMaterial, insideDiv);
-    //             createPlaneText(divPText, divPos, allElFontSize);
-    //             // createPlaneText(divPText, divPos, allElFontSize);
-    //             console.log("print div p");
-    //         }
-
-    //         if (divNodeName == "IMG") {
-    //             createImage(divArrayNum, divImgUrl, divPos, insideDiv);
-    //             console.log("print div image");
-    //         }
-    // }
-
-    // }
-  }
-
-}
-
-
-//create text
-function createText(pText, arrayNum, allElementsPos, allElFontSize, textMaterial, insideDiv) {
-    // let pText = allElements[i].children[a].innerText;
-        //create text
-        let loader = new THREE.FontLoader();
-        loader.load(
-          "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/fonts/gentilis_regular.typeface.json",
-          function(font) {
-            let textGeo = new THREE.TextGeometry(pText, {
-              font: font,
-              size: allElFontSize,
-              height: 0.003,
-              curveSegments: 10,
-              // bevelEnabled: false,
-              bevelThickness: 1,
-              bevelSize: 0,
-              bevelOffset: 0,
-              bevelSegments: 15,
-              bevelEnabled: false
-            });
-            textGeo.computeBoundingBox();
-            textGeo.computeVertexNormals();
-            // console.log(textMaterial);
-            text = new THREE.Mesh(textGeo, textMaterial);
-
-            console.log("💬",insideDiv, " '", pText, "' ", "text pos before algorithm", allElementsPos)
-            text.position.x = canvasLeft + allElementsPos.left /ratio;
-            text.position.y = canvasTop - allElementsPos.top /ratio;
-            // console.log("text.x", text.position.x);
-            // console.log("💬", insideDiv, " '", pText, "' ","'s x position after algorithm is", text.position.x);
-
-
-            const geometry = new THREE.BoxGeometry( 0.1*(arrayNum+1), 0.1*(arrayNum+1), 0.1*(arrayNum+1) ); 
-            const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); 
-            const cube = new THREE.Mesh( geometry, material ); 
-            cube.position.x = canvasLeft + (allElementsPos.left/ratio);
-            cube.position.y = canvasTop - (allElementsPos.top/ratio);
-            scene.add( cube );
-
-            text.castShadow = true;
-            scene.add(text);
-
-            scene.add( new THREE.GridHelper(10, 10) );
-        
-          }
-        );
-}
-
-function createImage(arrayNum, imgUrl, imgPos, insideDiv){
-        let ImgWidth = imgPos.width;
-        let ImgHeight = imgPos.height;
-        let ImgResizeW = ImgWidth/ratio;
-        let ImgResizeH = ImgHeight/ratio;
-        let ImgLoader = new THREE.TextureLoader();
-        let ImgWHalf = ImgResizeW/2;
-        let ImgHHalf = ImgResizeH/2;
-        // console.log("🔴IMG POS")
-        // console.log(imgPos);
-
-        let ImgLeft = imgPos.left / ratio;
-        let ImgTop = imgPos.top / ratio;
-
-    
-        const ImgMaterial = new THREE.MeshBasicMaterial();
-        const ImgGeometry = new THREE.PlaneGeometry( ImgResizeW, ImgResizeH );
-
-        ImgLoader.load( imgUrl, 
-          function ( ImgTexture ) {    
-            ImgMaterial.map = ImgTexture;
-            // console.log(divImgMaterial.map);
-            ImgMaterial.needsUpdate = true;
-          });
-        
-        const ImgPlane = new THREE.Mesh( ImgGeometry, ImgMaterial );
-        // console.log("🖼️",insideDiv,"image all pos before algorithm is", imgPos);
-        // console.log("🖼️",insideDiv,"image left pos before algorithm is", imgPos.left);
-        
-
-        //making the image origin to the left border
-
-
-        let secondL = canvasLeft + ImgWHalf;// + (firstL /ratio);
-        ImgPlane.position.x = secondL + ImgLeft;
-
-        let secondT = canvasTop - ImgHHalf;
-        ImgPlane.position.y = secondT - ImgTop;
-
-        // ImgPlane.position.x = canvasLeft + imgPos.left /ratio;
-        // ImgPlane.position.y = canvasLeft - (imgPos.top /ratio); // has make the top number negative sign bc in threejs the higher the number is the higher it is in position
-        ImgPlane.position.z = -1;
-        // console.log("🖼️", insideDiv,"image x after algorithm is",ImgPlane.position.x);
-        // console.log("imgPlane Height", allElementsPos.height);
-        // ImgPlane.position.x = Math.random() * -35 +arrayNum;
-        // ImgPlane.position.y = Math.random() * -5 +arrayNum;
-        // ImgPlane.position.z = Math.random() * -15 +arrayNum;
-        
-        scene.add( ImgPlane );
-
-
-        //debug origin cube
-        const geometry = new THREE.BoxGeometry( 0.1*(arrayNum+1), 0.1*(arrayNum+1), 0.1*(arrayNum+1) ); 
-        const material = new THREE.MeshBasicMaterial( {color: 0xD70040} ); 
-        const cube = new THREE.Mesh( geometry, material ); 
-        cube.position.x = canvasLeft + (imgPos.left/ratio);
-        cube.position.y = canvasTop - (imgPos.top/ratio);
-        scene.add( cube );
-
-}
-
-function createPlaneText(text, imgPos, fontSize){
-  // console.log(imgPos.width);
-  let ImgWidth = imgPos.width;
-  let ImgHeight = imgPos.height;
-  let ImgResizeW = ImgWidth/ratio;
-  let ImgResizeH = ImgHeight/ratio;
-  let ImgLoader = new THREE.TextureLoader();
-  let ImgWHalf = ImgResizeW/2;
-  let ImgHHalf = ImgResizeH/2;
-
-  let ImgLeft = imgPos.left / ratio;
-  let ImgTop = imgPos.top / ratio;
-
-  const canObj1 = TextPlane.createCanObj({
-    rows: 152, size: ImgWidth,
-    palette: ['rgba(0,0,0,0)', 'black', 'black']
-  });
-  console.log("fontsize" + canObj1.size);
-  // canvas object 2 will use the 'rnd' built in draw method
-  // as a way to create a background a little more interesting
-  // than just a static background
-  let canObj2 = canvasMod.create({
-    draw: 'rnd',
-    size: ImgWidth,
-    update_mode: 'canvas',
-    state: {
-        gSize: 16
-    },
-    // palette: ['red', 'lime', 'cyan', 'purple', 'orange', 'green', 'blue']
-    palette: ['white', 'white', 'white', 'white', 'white', 'white', 'white']
-  });
-  // canvas object 3 will be the final background use for the material
-  let canObj3 = canvasMod.create({
-    draw: function(canObj, ctx, canvas, state){
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.globalAlpha = 0.3;
-        ctx.drawImage(canObj2.canvas, 0, 0);
-        ctx.globalAlpha = 1;
-        ctx.save();
-        ctx.translate(128, 128);
-        let d = state.rStart + state.rDelta * state.rAlpha;
-        ctx.rotate(Math.PI / 180 * d);
-        ctx.drawImage(canObj1.canvas, -128, -128);
-        ctx.restore();
-    },
-    size: ImgWidth,
-    update_mode: 'canvas',
-    state: {
-        rStart: -90,
-        rDelta: 180,
-        rAlpha: 100
-    },
-    palette: ['blue', 'white']
-  });
-  //-------- ----------
-  // MESH
-  //-------- ----------
-  const mesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(ImgWidth/ratio, ImgHeight/ratio),
-    new THREE.MeshBasicMaterial({
-        map: canObj3.texture,
-        transparent: true
-    })
-  );
-
-  //making the image origin to the left border
-
-
-  let secondL = canvasLeft + ImgWHalf;// + (firstL /ratio);
-  mesh.position.x = secondL + ImgLeft;
-
-  let secondT = canvasTop - ImgHHalf;
-  mesh.position.y = secondT - ImgTop;
-  console.log("here");
-  
-  // mesh.position.set(0, 1, 0);
-  // mesh.position.x = canvasLeft + (tpPos.left/ratio);
-  // mesh.position.y = canvasTop - (tpPos.top/ratio);
-  mesh.position.z = 0;
-  scene.add(mesh);
-  //-------- ----------
-  // TEXT and textLines
-  //-------- ----------
-  const text2 = text;
-  const textLines = TextPlane.createTextLines(text2, 22);
-  // ---------- ----------
-  // ANIMATION LOOP
-  // ---------- ----------
-  const FPS_UPDATE = 20, // fps rate to update ( low fps for low CPU use, but choppy video )
-  FPS_MOVEMENT = 30;     // fps rate to move object by that is independent of frame update rate
-  // FRAME_MAX = 600;
-  let secs = 0,
-  frame = 0,
-  lt = new Date();
-  // update
-  const update = function(frame, frameMax){
-    let a = frame / frameMax;
-    let b = 0.5;
-    // UPDATE
-    TextPlane.moveTextLines(canObj1.state.lines, textLines, 0, 0, 20);
-    // update canvas
-    canvasMod.update(canObj1);
-    //canvasMod.update(canObj2); // background can be animated or static
-    canObj3.state.rAlpha = b;
-    canvasMod.update(canObj3);
-  };
-  // loop
-  const loop = () => {
-    const now = new Date(),
-    secs = (now - lt) / 1000;
-    requestAnimationFrame(loop);
-    if(secs > 1 / FPS_UPDATE){
-        // update, render
-        update( Math.floor(frame), 600);
-        // update( Math.floor(frame), FRAME_MAX);
-        cssRenderer.render(scene, camera);
-        // step frame
-        // frame += FPS_MOVEMENT * secs;
-        // frame %= FRAME_MAX;
-        // lt = now;
-    }
-  };
-  loop();
-  
-}
-
 
 //3D Scene Initialization
 function init() {
-  // console.log(allElement);
+
+  scene = new THREE.Scene();
+  // scene.background = textureCube;
+  scene.background = new THREE.Color(0x87CEEB);
+
+  root = new THREE.Object3D();
+  root.position.x = 0;
+  root.position.y = 0;
+  root.position.z = 0;
+  // root.rotation.y = 0;
+  scene.add(root);
 
   container = document.createElement( 'div' );
   leftC= document.querySelector('#webglRender');
@@ -504,7 +85,7 @@ function init() {
   renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
   leftC.appendChild( renderer.domElement );
 
-  renderer2 = new THREE.CSS3DRenderer();
+  renderer2 = new CSS3DRenderer();
   renderer2.domElement.style.position = 'absolute';
   renderer2.domElement.style.top = 120;
   document.querySelector('#cssRender').appendChild(renderer2.domElement);
@@ -516,12 +97,6 @@ function init() {
     const controls = new OrbitControls(camera, leftC);
     controls.target.set(0, 5, 0);
     controls.update();
-
-
-    scene = new THREE.Scene();
-    // scene.background = textureCube;
-    scene.background = new THREE.Color(0x87CEEB);
-
 
     const geometry = new THREE.SphereBufferGeometry( 0.1, 32, 16 );
     const material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
@@ -597,6 +172,282 @@ function init() {
       }
 
 }
+
+//loop all iframe elements to change
+changeBtn.onclick = function create3D(){
+
+  //clean previous 3d objects in the scene
+  while (scene.children.length > 0) {
+    const child = scene.children[0];
+    scene.remove(child);
+}
+
+  // update iframe url to input box link
+  const searchText = document.getElementById("searchText");
+  const iframe1 = document.getElementById("iframe1");
+  // const tagsToSkip = {
+  //   'BODY': true,
+  // }
+
+      // Get the value from the input box
+      const newUrl = searchText.value;
+
+      // Update the iframe src attribute with the new URL
+      iframe1.src = `http://localhost:12345/getdata?name=${newUrl}`;
+
+
+    
+    // let iframe1 = document.getElementById("iframe1");
+  let allElements = iframe1.contentWindow.document.querySelector("body").children;
+
+  let geometry = new THREE.SphereBufferGeometry( 0.1, 32, 16 );
+  let material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
+
+  // get the size of the actual iframe container
+  let iframeBody = iframe1.contentWindow.document.querySelector("body");
+  let bodyRect = iframeBody.getBoundingClientRect();
+  //  console.log("BODY RECT:");
+
+  
+  for (let i = 0; i < allElements.length; i++) {
+
+    if (allElements[i].tagName == 'SCRIPT') {
+      continue;
+    }
+
+    let nodeName = allElements[i].nodeName;
+    let pText = allElements[i].innerText;
+    let imgUrl = allElements[i].currentSrc;
+    let arrayNum = i;
+
+
+    //Text Position and Color Setup 
+    let allElementsPos = allElements[i].getBoundingClientRect();
+  
+
+    const allElCSS = window.getComputedStyle(allElements[i], null);
+    // // let bgColorH1 = cssObjH1.getPropertyValue("background-color");
+
+    let allElFontSize = parseFloat(allElCSS.fontSize.replace('px', '')) / textRatio;
+
+    let components = allElCSS.color.split(", ");
+    components[1] = parseInt(components[1]);
+    components[0] = parseInt(components[0].split('(')[1]);
+    components[2] = parseInt(components[2].split(')')[0]);
+    let hexColorCode = rgbToHex(components[0], components[1], components[2]);
+
+    // // create a unique material for this entity
+    let textMaterial = new THREE.MeshLambertMaterial({ color: hexColorCode });
+
+    let insideDiv = "OUTSIDE div..."
+
+
+    //calculating width & height
+    let domWidth = allElements[i].width;
+    let domHeight = allElements[i].height;
+
+    // console.log(allElements[i]);
+    //turn 2d dom into 3d object using css3D
+    let textObj = makeElementObject(allElements[i], 500, 500);
+    root.add(textObj);
+    // console.log('text' + textObj.css3dObject.element.textContent + 'x is' + textObj.position.x);
+
+    if (nodeName == "P") {
+        createText(pText, arrayNum, allElementsPos, allElFontSize,textMaterial, insideDiv);
+        // console.log("printed p!");
+    }
+
+    if (nodeName == "H1") {
+        // const H1Object = new THREE.Object3D();
+        // H1Object.position.x = 5 + allElementsPos.left /ratio;
+        // H1Object.position.y = 5 + allElementsPos.top /ratio;
+        // createText(pText, arrayNum, allElementsPos, allElFontSize, textMaterial, insideDiv);
+    }
+    
+    if (nodeName == "H2") {
+        // createText(pText, arrayNum);
+        createText(pText, arrayNum, allElementsPos, allElFontSize, textMaterial, insideDiv);
+        console.log("printed h2!");
+    }
+ 
+    if (nodeName == "IMG") {
+        // createImage(arrayNum, imgUrl, allElementsPos, insideDiv);
+    }
+
+    console.log('text' + textObj.css3dObject.element.textContent + 'x is' + textObj.position.x);
+
+  }
+
+  // console.log(root);
+
+}
+
+
+//create text
+function createText(pText, arrayNum, allElementsPos, allElFontSize, textMaterial, insideDiv) {
+    // let pText = allElements[i].children[a].innerText;
+        //create text
+        let loader = new THREE.FontLoader();
+        loader.load(
+          "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/fonts/gentilis_regular.typeface.json",
+          function(font) {
+            let textGeo = new THREE.TextGeometry(pText, {
+              font: font,
+              size: allElFontSize,
+              height: 0.003,
+              curveSegments: 10,
+              // bevelEnabled: false,
+              bevelThickness: 1,
+              bevelSize: 0,
+              bevelOffset: 0,
+              bevelSegments: 15,
+              bevelEnabled: false
+            });
+            textGeo.computeBoundingBox();
+            textGeo.computeVertexNormals();
+            // console.log(textMaterial);
+            text = new THREE.Mesh(textGeo, textMaterial);
+
+            // console.log("💬",insideDiv, " '", pText, "' ", "text pos before algorithm", allElementsPos)
+            text.position.x = canvasLeft + allElementsPos.left /ratio;
+            text.position.y = canvasTop - allElementsPos.top /ratio;
+            // console.log("text.x", text.position.x);
+            // console.log("💬", insideDiv, " '", pText, "' ","'s x position after algorithm is", text.position.x);
+
+
+            const geometry = new THREE.BoxGeometry( 0.1*(arrayNum+1), 0.1*(arrayNum+1), 0.1*(arrayNum+1) ); 
+            const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); 
+            const cube = new THREE.Mesh( geometry, material ); 
+            cube.position.x = canvasLeft + (allElementsPos.left/ratio);
+            cube.position.y = canvasTop - (allElementsPos.top/ratio);
+            scene.add( cube );
+
+            text.castShadow = true;
+            scene.add(text);
+
+            scene.add( new THREE.GridHelper(10, 10) );
+        
+          }
+        );
+}
+
+function createImage(arrayNum, imgUrl, imgPos, insideDiv){
+        let ImgWidth = imgPos.width;
+        let ImgHeight = imgPos.height;
+        let ImgResizeW = ImgWidth/ratio;
+        let ImgResizeH = ImgHeight/ratio;
+        let ImgLoader = new THREE.TextureLoader();
+        let ImgWHalf = ImgResizeW/2;
+        let ImgHHalf = ImgResizeH/2;
+        // console.log("🔴IMG POS")
+        // console.log(imgPos);
+
+        let ImgLeft = imgPos.left / ratio;
+        let ImgTop = imgPos.top / ratio;
+    
+        const ImgMaterial = new THREE.MeshBasicMaterial();
+        const ImgGeometry = new THREE.PlaneGeometry( ImgResizeW, ImgResizeH );
+
+        ImgLoader.load( imgUrl, 
+          function ( ImgTexture ) {    
+            ImgMaterial.map = ImgTexture;
+            // console.log(divImgMaterial.map);
+            ImgMaterial.needsUpdate = true;
+          });
+        
+        const ImgPlane = new THREE.Mesh( ImgGeometry, ImgMaterial );
+        // console.log("🖼️",insideDiv,"image all pos before algorithm is", imgPos);
+        // console.log("🖼️",insideDiv,"image left pos before algorithm is", imgPos.left);
+        
+
+        //making the image origin to the left border
+
+
+        let secondL = canvasLeft + ImgWHalf;// + (firstL /ratio);
+        ImgPlane.position.x = secondL + ImgLeft;
+
+        let secondT = canvasTop - ImgHHalf;
+        ImgPlane.position.y = secondT - ImgTop;
+
+        // ImgPlane.position.x = canvasLeft + imgPos.left /ratio;
+        // ImgPlane.position.y = canvasLeft - (imgPos.top /ratio); // has make the top number negative sign bc in threejs the higher the number is the higher it is in position
+        ImgPlane.position.z = -1;
+        // console.log("🖼️", insideDiv,"image x after algorithm is",ImgPlane.position.x);
+        // console.log("🖼️", insideDiv,"image y after algorithm is",ImgPlane.position.y);
+        // console.log("imgPlane Height", allElementsPos.height);
+        // ImgPlane.position.x = Math.random() * -35 +arrayNum;
+        // ImgPlane.position.y = Math.random() * -5 +arrayNum;
+        // ImgPlane.position.z = Math.random() * -15 +arrayNum;        
+        scene.add( ImgPlane );
+
+
+        //debug origin cube
+        const geometry = new THREE.BoxGeometry( 0.1*(arrayNum+1), 0.1*(arrayNum+1), 0.1*(arrayNum+1) ); 
+        const material = new THREE.MeshBasicMaterial( {color: 0xD70040} ); 
+        const cube = new THREE.Mesh( geometry, material ); 
+        cube.position.x = canvasLeft + (imgPos.left/ratio);
+        cube.position.y = canvasTop - (imgPos.top/ratio);
+        scene.add( cube );
+
+}
+
+
+function makeElementObject(domElement, width, height) {
+  const obj = new THREE.Object3D();
+  const innerText = domElement.innerHTML;
+  // console.log('innertext' + innerText);
+
+  domElement.style.width = width + 'px';
+  domElement.style.height = height + 'px';
+  domElement.style.opacity = 0.999;
+  domElement.style.boxSizing = 'border-box';
+
+  var css3dObject = new CSS3DObject(domElement);
+  obj.css3dObject = css3dObject;
+  obj.add(css3dObject);
+
+
+  // make an invisible plane for the DOM element to chop
+  // clip a WebGL geometry with it.
+  var material = new THREE.MeshPhongMaterial({
+    opacity: 0.15,
+    color: new THREE.Color(0x111111),
+    blending: THREE.NoBlending
+    // side	: THREE.DoubleSide,
+  });
+  var geometry = new THREE.BoxGeometry(width, height, 1);
+  var mesh = new THREE.Mesh(geometry, material);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  obj.lightShadowMesh = mesh;
+  obj.add(mesh);
+
+  obj.css3dObject.element.textContent = innerText;
+  obj.css3dObject.element.setAttribute('contenteditable', '');
+  obj.position.x = -2.1;
+  obj.position.y = -0.4;
+  obj.position.z = 0;
+  obj.css3dObject.element.style.opacity = "1";
+  // obj.css3dObject.element.style.padding = '10px';
+  // console.log('📑' + obj.css3dObject.element.textContent + "'s x pos is" + obj.position.x);
+  // console.log('📑' + obj.css3dObject.element.textContent + "'s y pos is" + obj.position.y);
+  
+  const color1 = '#7bb38d';
+  const color2 = '#71a381';
+  obj.css3dObject.element.style.background = `repeating-linear-gradient(
+        45deg,
+        ${color1},
+        ${color1} 10px,
+        ${color2} 10px,
+        ${color2} 20px
+    )`;
+
+  return obj;
+}
+
+
+
+
 
 function onWindowResize() {
 

@@ -60,7 +60,7 @@ iframe {
 #webglRender{
     position: absolute;
     left:30px;
-    top:120px;
+    top:210px;
     width: 100%;
     height:100%;
 }
@@ -68,7 +68,7 @@ iframe {
 #cssRender{
     position: absolute;
     left:30px;
-    top:120px;
+    top:210px;
     width: 100%;
     height:100%;
 

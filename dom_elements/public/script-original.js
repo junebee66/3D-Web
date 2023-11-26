@@ -322,7 +322,7 @@ function createImage(arrayNum, imgUrl, imgPos, insideDiv){
         
         const ImgPlane = new THREE.Mesh( ImgGeometry, ImgMaterial );
         console.log("🖼️",insideDiv,"image all pos before algorithm is", imgPos);
-        console.log("🖼️",insideDiv,"image left pos before algorithm is", imgPos.left);
+        // console.log("🖼️",insideDiv,"image left pos before algorithm is", imgPos.left);
         
 
         //making the image origin to the left border

@@ -2,17 +2,24 @@ var camera, root, scene, testobj, renderer, renderer2, background;
 var sphere;
 var light;
 
+//When updating information in this code, I have to stop the localhost:12345 in the terminal with ctrl + c 
+//and then run "node index.js" again, then reload the http://localhost:12345/ page to see changes
+
+
 // for whatever 
 const iframe1 = document.getElementById("iframe1");
+iframe1.onload = function() {
+  console.log("iframe is loaded");
+  console.log(iframe1);
+  init();
+  animate(performance.now());
+}
 const test = document.getElementById("test");
 
 let allElements = iframe1.contentWindow.document.querySelector("body").children;
-
 let iframeBody = iframe1.contentWindow.document.querySelector("body");
 let bodyRect = iframeBody.getBoundingClientRect();
 
-init();
-animate(performance.now());
 
 function init() {
   scene = new THREE.Scene();
@@ -23,33 +30,32 @@ function init() {
 
   console.log(iframe1);
   
-
   testobj = makeElementObject(test, 200, 200);
   root.add(testobj);
 
 
-  for (let i = 0; i < allElements.length; i++) {
+  // for (let i = 0; i < allElements.length; i++) {
 
-  console.log(allElements[0]);
+  // console.log(allElements[0]);
 
-  background = makeElementObject(allElements[i], 200, 200);
-  background.css3dObject.element.textContent = "I am a <div> element intersecting a WebGL sphere.\n\nThis text is editable!";
-  background.css3dObject.element.setAttribute('contenteditable', '');
-  background.position.z = 20;
-  background.css3dObject.element.style.opacity = "1";
-  background.css3dObject.element.style.padding = '10px';
-  const color1 = '#7bb38d';
-  const color2 = '#71a381';
-  background.css3dObject.element.style.background = `repeating-linear-gradient(
-        45deg,
-        ${color1},
-        ${color1} 10px,
-        ${color2} 10px,
-        ${color2} 20px
-    )`;
-  root.add(background);
+  // background = makeElementObject(allElements[i], 200, 200);
+  // background.css3dObject.element.textContent = "I am a <div> element intersecting a WebGL sphere.\n\nThis text is editable!";
+  // background.css3dObject.element.setAttribute('contenteditable', '');
+  // background.position.z = 20;
+  // background.css3dObject.element.style.opacity = "1";
+  // background.css3dObject.element.style.padding = '10px';
+  // const color1 = '#7bb38d';
+  // const color2 = '#71a381';
+  // background.css3dObject.element.style.background = `repeating-linear-gradient(
+  //       45deg,
+  //       ${color1},
+  //       ${color1} 10px,
+  //       ${color2} 10px,
+  //       ${color2} 20px
+  //   )`;
+  // root.add(background);
 
-  }
+  // }
 
 
   // make a geometry that we will clip with the DOM elememt.
@@ -62,7 +68,6 @@ function init() {
       flatShading: false,
       shininess: 30,
       vertexColors: true });
-
 
     var geometry = new THREE.SphereBufferGeometry(70, 32, 32);
 
@@ -194,9 +199,9 @@ function makeElementObject(element, width, height) {
 
   obj.css3dObject.element.textContent = innerText;
   obj.css3dObject.element.setAttribute('contenteditable', '');
-  obj.position.z = 20;
+  obj.position.z = 0;
   obj.css3dObject.element.style.opacity = "1";
-  obj.css3dObject.element.style.padding = '10px';
+  // obj.css3dObject.element.style.padding = '10px';
   const color1 = '#7bb38d';
   const color2 = '#71a381';
   obj.css3dObject.element.style.background = `repeating-linear-gradient(

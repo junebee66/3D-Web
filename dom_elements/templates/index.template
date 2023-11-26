@@ -11,17 +11,27 @@
 
 
 	<body>
-
                 <script type="importmap">
 			{
 				"imports": {
-					"three": "../build/three.module.js",
-					"three/addons/": "./jsm/"
+					"three": "/build/three.module.js",
+					"three/addons/": "/jsm/"
 				}
 			}
 		</script>
+
+                <script type="module">
+
+			import * as THREE from 'three';
+
+			import TWEEN from 'three/addons/libs/tween.module.js';
+			import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+			import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+                </script>
+
+
                 
-                <script src="three.min.js"></script>
+                <script src="https://unpkg.com/three@0.118.0/build/three.js"></script>
                 <script src="canvas-r1.js"></script>
                 <script src="text-plane-r0.js"></script>
 		
@@ -43,7 +53,7 @@
                 <div id="cssRender"></div>
                 <div id="webglRender"></div>
 
-        <script type="module" src="script-original.js"></script>
+        <script type="module" src="script1.js"></script>
 
 
 	</body>
