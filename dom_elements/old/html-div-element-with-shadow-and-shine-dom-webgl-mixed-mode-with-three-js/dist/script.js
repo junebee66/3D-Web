@@ -30,6 +30,8 @@ function init() {
 
   root.add(background);
 
+  console.log(root);
+
   const button = makeElementObject('button', 75, 20);
   button.css3dObject.element.style.border = '2px solid #fa5a85';
   button.css3dObject.element.textContent = "Click me!";
@@ -156,6 +158,7 @@ function makeElementObject(type, width, height) {
   var css3dObject = new THREE.CSS3DObject(element);
   obj.css3dObject = css3dObject;
   obj.add(css3dObject);
+  // console.log(obj);
 
   // console.log(obj);
 

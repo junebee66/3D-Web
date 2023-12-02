@@ -32,9 +32,10 @@
 
                 
                 <script src="https://unpkg.com/three@0.118.0/build/three.js"></script>
+                <!-- The Search 
                 <script src="canvas-r1.js"></script>
                 <script src="text-plane-r0.js"></script>
-		
+                -->	
 
                         
         <div id="topBar">
@@ -46,7 +47,8 @@
 
                         <!-- change the URL for your website after name= on the next line -->
                         <iframe src="http://localhost:12345/getdata?name=https://junebee66.github.io/3D-Web/dom_elements/basic_web/basic.html" title="basic web" id="iframe1"></iframe>
-        
+                        <iframe src="http://localhost:12345/getdata?name=https://junebee66.github.io/3D-Web/dom_elements/basic_web/basic.html" title="basic web" id="looking"></iframe>
+                        
                         
         </div>
 

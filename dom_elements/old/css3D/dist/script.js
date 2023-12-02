@@ -1,4 +1,4 @@
-var camera, root, scene, testobj, renderer, renderer2, background;
+var camera, root, scene, testobj,testobj2, renderer, renderer2, background;
 var sphere;
 var light;
 
@@ -10,11 +10,13 @@ var light;
 const iframe1 = document.getElementById("iframe1");
 iframe1.onload = function() {
   console.log("iframe is loaded");
-  console.log(iframe1);
+  // console.log(iframe1);
   init();
   animate(performance.now());
 }
+
 const test = document.getElementById("test");
+const test2 = document.getElementById("basic_web");
 
 let allElements = iframe1.contentWindow.document.querySelector("body").children;
 let iframeBody = iframe1.contentWindow.document.querySelector("body");
@@ -27,36 +29,11 @@ function init() {
   root.position.y = 20;
   root.rotation.y = Math.PI / 3;
   scene.add(root);
-
-  console.log(iframe1);
   
   testobj = makeElementObject(test, 200, 200);
-  root.add(testobj);
-
-
-  // for (let i = 0; i < allElements.length; i++) {
-
-  // console.log(allElements[0]);
-
-  // background = makeElementObject(allElements[i], 200, 200);
-  // background.css3dObject.element.textContent = "I am a <div> element intersecting a WebGL sphere.\n\nThis text is editable!";
-  // background.css3dObject.element.setAttribute('contenteditable', '');
-  // background.position.z = 20;
-  // background.css3dObject.element.style.opacity = "1";
-  // background.css3dObject.element.style.padding = '10px';
-  // const color1 = '#7bb38d';
-  // const color2 = '#71a381';
-  // background.css3dObject.element.style.background = `repeating-linear-gradient(
-  //       45deg,
-  //       ${color1},
-  //       ${color1} 10px,
-  //       ${color2} 10px,
-  //       ${color2} 20px
-  //   )`;
-  // root.add(background);
-
-  // }
-
+  testobj2 = makeElementObject(test2, 500, 500);
+  // root.add(testobj);
+  root.add(testobj2);
 
   // make a geometry that we will clip with the DOM elememt.
   ~function () {
@@ -149,7 +126,7 @@ function animate(time) {
 
   light.position.x = 30 * Math.sin(time * 0.003) + 30;
   light.position.y = 40 * Math.cos(time * 0.001) - 20;
-  testobj.rotation.y = Math.PI / 8 * Math.cos(time * 0.001) - Math.PI / 6;
+  testobj2.rotation.y = Math.PI / 8 * Math.cos(time * 0.001) - Math.PI / 6;
   // background.rotation.y = Math.PI / 8 * Math.cos(time * 0.001) - Math.PI / 6;
   // background.rotation.x = Math.PI / 10 * Math.sin(time * 0.001) - Math.PI / 10;
   sphere.rotation.x += 0.005;
@@ -199,7 +176,7 @@ function makeElementObject(element, width, height) {
 
   obj.css3dObject.element.textContent = innerText;
   obj.css3dObject.element.setAttribute('contenteditable', '');
-  obj.position.z = 0;
+  obj.position.z = 50;
   obj.css3dObject.element.style.opacity = "1";
   // obj.css3dObject.element.style.padding = '10px';
   const color1 = '#7bb38d';
