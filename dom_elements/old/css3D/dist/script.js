@@ -172,7 +172,8 @@ function makeElementObject(element, width, height) {
   mesh.castShadow = true;
   mesh.receiveShadow = true;
   obj.lightShadowMesh = mesh;
-  obj.add(mesh);
+  //obj.add(mesh);
+
 
   obj.css3dObject.element.textContent = innerText;
   obj.css3dObject.element.setAttribute('contenteditable', '');
@@ -181,13 +182,13 @@ function makeElementObject(element, width, height) {
   // obj.css3dObject.element.style.padding = '10px';
   const color1 = '#7bb38d';
   const color2 = '#71a381';
-  obj.css3dObject.element.style.background = `repeating-linear-gradient(
-        45deg,
-        ${color1},
-        ${color1} 10px,
-        ${color2} 10px,
-        ${color2} 20px
-    )`;
+  // obj.css3dObject.element.style.background = `repeating-linear-gradient(
+  //       45deg,
+  //       ${color1},
+  //       ${color1} 10px,
+  //       ${color2} 10px,
+  //       ${color2} 20px
+  //   )`;
 
   return obj;
 }

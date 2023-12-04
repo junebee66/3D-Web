@@ -71,6 +71,11 @@ body{
     /* pointer-events: none; */
 }
 
+.noScroll {
+    pointer-events: none;
+    transform: none;
+}
+
 #cssRender{
     position: absolute;
     /* left:0px;
@@ -89,5 +94,5 @@ body{
         var(--c2) 20px,
         var(--c2) 40px
     ); */
-
+pointer-events: none;
 }

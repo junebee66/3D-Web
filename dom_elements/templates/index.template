@@ -47,7 +47,7 @@
 
                         <!-- change the URL for your website after name= on the next line -->
                         <iframe src="http://localhost:12345/getdata?name=https://junebee66.github.io/3D-Web/dom_elements/basic_web/basic.html" title="basic web" id="iframe1"></iframe>
-                        <iframe src="http://localhost:12345/getdata?name=https://junebee66.github.io/3D-Web/dom_elements/basic_web/basic.html" title="basic web" id="looking"></iframe>
+                        <!--<iframe src="http://localhost:12345/getdata?name=https://junebee66.github.io/3D-Web/dom_elements/basic_web/basic.html" title="basic web" id="looking"></iframe>-->
                         
                         
         </div>
@@ -55,7 +55,9 @@
                 <div id="cssRender"></div>
                 <div id="webglRender"></div>
 
+        <!--<script type="module" src="script-seperateDom.js"></script>-->
         <script type="module" src="script1.js"></script>
+        <!--<script type="module" src="script_oneIframeObj.js"></script>-->
 
 
 	</body>

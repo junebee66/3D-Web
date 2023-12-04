@@ -16,6 +16,10 @@ let container, camera, scene, renderer, renderer2, cssRenderer, effect, leftC, r
 
 let mouseX = 0;
 let mouseY = 0;
+let canvasLeft = -15;
+let canvasTop = 15;
+let ratio = 20;
+let roots = [];
   
 
 // const iframe1 = document.getElementById("iframe1");
@@ -29,34 +33,42 @@ let mouseY = 0;
 
 const iframe1 = document.getElementById("iframe1");
 let iframeBody = iframe1.contentWindow.document.querySelector("body");
-let bodyRect = iframeBody.getBoundingClientRect();
-let bodyWidth = bodyRect.width;
-let bodyHeight = bodyRect.height;
+// let allElements = iframe1.contentWindow.document.querySelector("body").children;
+// let bodyRect = iframeBody.getBoundingClientRect();
+// let bodyWidth = bodyRect.width;
+// let bodyHeight = bodyRect.height;
+
 
 init();
 animate();
 
-changeBtn.onclick = function(){
+// changeBtn.onclick = function(){
 
-  const showing = document.getElementById("showing");
-  const searchText = document.getElementById("searchText");
-  let allElements = iframe1.contentWindow.document.querySelector("body").children;
-  const newUrl = searchText.value;
-  iframe1.src = `http://localhost:12345/getdata?name=${newUrl}`;
-  showing.src = `http://localhost:12345/getdata?name=${newUrl}`;
+//   // clean previous 3d objects in the scene
+//   while (scene.children.length > 0) {
+//     const child = scene.children[0];
+//     scene.remove(child);
+//     console.log("removed all children");
+//     // console.log(scene);
+//   }
 
+// // iframe1.onload = function() {
+//   let allElements = iframe1.contentWindow.document.querySelector("body").children;
+//     // const showing = document.getElementById("showing");
+//     const searchText = document.getElementById("searchText");
+//     const newUrl = searchText.value;
+//     iframe1.src = `http://localhost:12345/getdata?name=${newUrl}`;
+//     // showing.src = `http://localhost:12345/getdata?name=${newUrl}`;
 
-  //clean previous 3d objects in the scene
-  while (scene.children.length > 0) {
-    const child = scene.children[0];
-    scene.remove(child);
-}
+//   for (let i = 0; i < allElements.length; i++) {
+//     let allElementsPos = allElements[i].getBoundingClientRect();
+//     textObj = makeElementObject(allElements[i], allElementsPos, 300, 300, i);
+//     root.add(textObj);
+//     scene.add(root);
+//   }
+// // }
 
-textObj = makeElementObject(iframe1, bodyWidth, bodyHeight);
-root.add(textObj);
-console.log("get here!");
-
-}
+// }
 
 //3D Scene Initialization
 function init() {
@@ -67,16 +79,46 @@ function init() {
   root = new THREE.Object3D();
   root.position.x = 0;
   root.position.y = 0;
-  root.position.z = 0;
-  root.rotation.y = Math.PI / 3;
+  // root.rotation.y = Math.PI / 3;
   scene.add(root);
 
+
+  // const iframe1 = document.getElementById("iframe1");
+  // const newUrl = searchText.value;
+  // iframe1.src = `http://localhost:12345/getdata?name=${newUrl}`;
+
+  // textObj = makeElementObject(iframe1, 800, 500);
+  // root.add(textObj);
+
   const iframe1 = document.getElementById("iframe1");
+  const searchText = document.getElementById("searchText");
+  // let allElements = iframe1.contentWindow.document.querySelector("body").children;
   const newUrl = searchText.value;
   iframe1.src = `http://localhost:12345/getdata?name=${newUrl}`;
 
-  textObj = makeElementObject(iframe1, 800, 500);
-  console.log(textObj);
+
+  iframe1.onload = function() {
+    let allElements = iframe1.contentWindow.document.querySelector("body").children;
+    console.log("iframe is loaded");
+
+    for (let i = 0; i < allElements.length; i++) {
+      let allElementsPos = allElements[i].getBoundingClientRect();
+      
+      const tagsToSkip = {
+        'BODY': true,
+        'SCRIPT': true
+      }
+
+      if (!tagsToSkip[allElements[i].tagName]) {
+      textObj = makeElementObject(allElements[i], allElementsPos, i);
+      root.add(textObj);
+      scene.add(root);  
+      // console.log(scene);
+    }
+    }
+  }
+
+  textObj = makeElementObject(iframe1, 300, 5);
   root.add(textObj);
 
 
@@ -133,9 +175,9 @@ function init() {
     root.add(sphere);
   }();
 
-  container = document.createElement( 'div' );
+  // container = document.createElement( 'div' );
   leftC = document.querySelector('#webglRender');
-//   leftC.appendChild( container );
+  // leftC.appendChild( container );
 
   renderer2 = new CSS3DRenderer();
   renderer2.domElement.style.position = 'absolute';
@@ -147,15 +189,15 @@ function init() {
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
-//   container.appendChild( renderer.domElement );
-document.querySelector('#webglRender').appendChild(renderer.domElement);
+  //container.appendChild( renderer.domElement );
+  document.querySelector('#webglRender').appendChild(renderer.domElement);
 
     //anaglyph camera
-    // camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.01, 100 );
-    // camera.position.z = 40;
-    // camera.focalLength = 3;
-    camera = new THREE.PerspectiveCamera();
-    camera.position.set(0, 0, 1000);
+    camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.01, 100 );
+    camera.position.z = 40;
+    camera.focalLength = 3;
+    // camera = new THREE.PerspectiveCamera();
+    // camera.position.set(0, 0, 1000);
 
     const controls = new OrbitControls(camera, leftC);
     controls.target.set(0, 5, 0);
@@ -182,17 +224,29 @@ document.querySelector('#webglRender').appendChild(renderer.domElement);
 }
 
 
-function makeElementObject(element, width, height) {
-    // console.log("make3d object" + element);
+function makeElementObject(element, allElementsPos, arrayNum) {
+    let bgWidth = allElementsPos.width;
+    let bgHeight = allElementsPos.height;
+    let bgResizeW = bgWidth/ratio;
+    let bgResizeH = bgHeight/ratio;
+    let bgWHalf = bgResizeW/2;
+    let bgHHalf = bgResizeH/2;
+    let bgLeft = allElementsPos.left;
+    let bgTop = allElementsPos.top;
+  
+  
     const obj = new THREE.Object3D();
     const innerText = element.innerHTML;
   
-    element.style.width = width + 'px';
-    element.style.height = height + 'px';
+    element.style.width = bgWidth + 'px';
+    element.style.height = bgHeight + 'px';
     element.style.opacity = 0.999;
     element.style.boxSizing = 'border-box';
+    element.style.position = "relative";
+    console.log(element);
+    console.log(innerText +element.style.transform);
   
-    var css3dObject = new CSS3DObject(element);
+    let css3dObject = new CSS3DObject(element);
     obj.css3dObject = css3dObject;
     obj.add(css3dObject);
   
@@ -205,20 +259,36 @@ function makeElementObject(element, width, height) {
       transparent: true
       // side	: THREE.DoubleSide,
     });
-    var geometry = new THREE.BoxGeometry(width, height, 1);
+
+    var geometry = new THREE.BoxGeometry(bgWidth, bgHeight, 1);
     var mesh = new THREE.Mesh(geometry, material);
+
+    mesh.position.x = canvasLeft + bgLeft;
+    mesh.position.y = bgTop;
+    mesh.position.z = 0;
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     obj.lightShadowMesh = mesh;
     obj.add(mesh);
-  
+
+
+    let secondL = canvasLeft + bgWHalf;// + (firstL /ratio);
+    let secondT = canvasTop - bgHHalf;
+
     obj.css3dObject.element.textContent = innerText;
     obj.css3dObject.element.setAttribute('contenteditable', '');
-    obj.position.z = 0;
-    obj.css3dObject.element.style.opacity = "1";
-    // obj.css3dObject.element.style.padding = '10px';
-    const color1 = '#7bb38d';
-    const color2 = '#71a381';
+    
+    // console.log(element);
+    // console.log("🔴" + innerText + "is" + obj.position.x);
+    // obj.position.x = canvasLeft + allElementsPos.left /ratio;
+    // obj.position.y = canvasTop - allElementsPos.top/ratio;
+    obj.position.x = (secondL + bgLeft) +ratio;
+    obj.position.y = secondT - bgTop +ratio;
+    obj.position.z = 1-arrayNum*90;
+    obj.css3dObject.element.style.opacity = "10";
+    obj.css3dObject.element.style.padding = '0px';
+    // const color1 = '#7bb38d';
+    // const color2 = '#71a381';
     // obj.css3dObject.element.style.background = `repeating-linear-gradient(
     //       45deg,
     //       ${color1},
@@ -235,7 +305,7 @@ function resize() {
     camera.fov = 45;
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.near = 1;
-    camera.far = 2000;
+    camera.far = 8000;
     camera.updateProjectionMatrix();
     renderer2.setSize(window.innerWidth, window.innerHeight);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -257,13 +327,13 @@ function animate(time) {
 
     light.position.x = 30 * Math.sin(time * 0.003) + 30;
     light.position.y = 40 * Math.cos(time * 0.001) - 20;
-    textObj.rotation.y = Math.PI / 8 * Math.cos(time * 0.001) - Math.PI / 6;
+    // root.rotation.y = Math.PI / 8 * Math.cos(time * 0.001) - Math.PI / 6;
     // background.rotation.y = Math.PI / 8 * Math.cos(time * 0.001) - Math.PI / 6;
     // background.rotation.x = Math.PI / 10 * Math.sin(time * 0.001) - Math.PI / 10;
     sphere.rotation.x += 0.005;
     sphere.rotation.y += 0.005;
   
-    scene.updateMatrixWorld();
+    // scene.updateMatrixWorld();
   
     renderer.render(scene, camera);
     renderer2.render(scene, camera);
@@ -276,12 +346,10 @@ function render() {
 
     const timer = 0.0001 * Date.now();
 
-    camera.position.x += ( mouseX - camera.position.x ) * .05;
-    camera.position.y += ( - mouseY - camera.position.y ) * .05;
+    // camera.position.x += ( mouseX - camera.position.x ) * .05;
+    // camera.position.y += ( - mouseY - camera.position.y ) * .05;
 
     camera.lookAt( scene.position );
-
-
     effect.render( scene, camera );
 }
 
@@ -391,5 +459,3 @@ function performFetch(args) {
   } // end POST request
 
 }
-
-

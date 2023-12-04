@@ -20,55 +20,13 @@ let canvasLeft = -15;
 let canvasTop = 15;
 let ratio = 20;
 let roots = [];
-  
 
-// const iframe1 = document.getElementById("iframe1");
-// iframe1.onload = function() {
-//   console.log("iframe is loaded");
-//   // console.log(iframe1);
-//   init();
-// //   animate(performance.now());
-// animate();
-// }
 
 const iframe1 = document.getElementById("iframe1");
 let iframeBody = iframe1.contentWindow.document.querySelector("body");
-// let allElements = iframe1.contentWindow.document.querySelector("body").children;
-// let bodyRect = iframeBody.getBoundingClientRect();
-// let bodyWidth = bodyRect.width;
-// let bodyHeight = bodyRect.height;
-
 
 init();
 animate();
-
-// changeBtn.onclick = function(){
-
-//   // clean previous 3d objects in the scene
-//   while (scene.children.length > 0) {
-//     const child = scene.children[0];
-//     scene.remove(child);
-//     console.log("removed all children");
-//     // console.log(scene);
-//   }
-
-// // iframe1.onload = function() {
-//   let allElements = iframe1.contentWindow.document.querySelector("body").children;
-//     // const showing = document.getElementById("showing");
-//     const searchText = document.getElementById("searchText");
-//     const newUrl = searchText.value;
-//     iframe1.src = `http://localhost:12345/getdata?name=${newUrl}`;
-//     // showing.src = `http://localhost:12345/getdata?name=${newUrl}`;
-
-//   for (let i = 0; i < allElements.length; i++) {
-//     let allElementsPos = allElements[i].getBoundingClientRect();
-//     textObj = makeElementObject(allElements[i], allElementsPos, 300, 300, i);
-//     root.add(textObj);
-//     scene.add(root);
-//   }
-// // }
-
-// }
 
 //3D Scene Initialization
 function init() {
@@ -81,14 +39,6 @@ function init() {
   root.position.y = 0;
   // root.rotation.y = Math.PI / 3;
   scene.add(root);
-
-
-  // const iframe1 = document.getElementById("iframe1");
-  // const newUrl = searchText.value;
-  // iframe1.src = `http://localhost:12345/getdata?name=${newUrl}`;
-
-  // textObj = makeElementObject(iframe1, 800, 500);
-  // root.add(textObj);
 
   const iframe1 = document.getElementById("iframe1");
   const searchText = document.getElementById("searchText");
@@ -110,16 +60,17 @@ function init() {
       }
 
       if (!tagsToSkip[allElements[i].tagName]) {
-      textObj = makeElementObject(allElements[i], allElementsPos, i);
-      root.add(textObj);
-      scene.add(root);  
+        // textObj = makeElementObject2(allElements[i], allElementsPos, i);
+        // textObj = makeElementObject2(allElements[i], 300, 300);
+        textObj = makeElementObject2(allElements[i], allElementsPos);
+        //root.add(textObj);
+      // scene.add(root);  
       // console.log(scene);
+        console.log(allElements[i].tagName);
+        break;
     }
     }
   }
-
-  textObj = makeElementObject(iframe1, 300, 5);
-  root.add(textObj);
 
 
   // light
@@ -172,7 +123,7 @@ function init() {
     sphere.position.y = -100;
     sphere.castShadow = true;
     sphere.receiveShadow = false;
-    root.add(sphere);
+    // root.add(sphere);
   }();
 
   // container = document.createElement( 'div' );
@@ -196,6 +147,8 @@ function init() {
     camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.01, 100 );
     camera.position.z = 40;
     camera.focalLength = 3;
+    
+    //default camera
     // camera = new THREE.PerspectiveCamera();
     // camera.position.set(0, 0, 1000);
 
@@ -234,10 +187,14 @@ function makeElementObject(element, allElementsPos, arrayNum) {
     let bgLeft = allElementsPos.left;
     let bgTop = allElementsPos.top;
   
-  
     const obj = new THREE.Object3D();
     const innerText = element.innerHTML;
+
+    let css3dObject = new CSS3DObject(element);
+    obj.css3dObject = css3dObject;
+    obj.add(css3dObject);
   
+    /*
     element.style.width = bgWidth + 'px';
     element.style.height = bgHeight + 'px';
     element.style.opacity = 0.999;
@@ -263,27 +220,37 @@ function makeElementObject(element, allElementsPos, arrayNum) {
     var geometry = new THREE.BoxGeometry(bgWidth, bgHeight, 1);
     var mesh = new THREE.Mesh(geometry, material);
 
-    mesh.position.x = canvasLeft + bgLeft;
-    mesh.position.y = bgTop;
+    //mesh is weird positioned
+    mesh.position.x = 0.5* bgWidth;
+    mesh.position.y = -0.5* bgHeight;
     mesh.position.z = 0;
+
+    // mesh.position.x = 0;
+    // mesh.position.y = 0;
+    // mesh.position.z = 0;
+
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     obj.lightShadowMesh = mesh;
     obj.add(mesh);
 
+    if (element.tagName == 'img') {
+      let secondL = canvasLeft + bgWHalf;// + (firstL /ratio);
+      let secondT = canvasTop - bgHHalf;
+      obj.position.x = secondL + bgLeft;
+      obj.position.y = secondT - bgTop;
+      // obj.position.x = 0.5*bgWidth;
+      // obj.position.y = 0.5*bgHeight;
+    }else{
+      // obj.position.x = canvasLeft + allElementsPos.left;
+      // obj.position.y = canvasTop - allElementsPos.top;
+      obj.position.x = 0.5*bgWidth;
+      obj.position.y = 0.5*bgHeight;
+    }
 
-    let secondL = canvasLeft + bgWHalf;// + (firstL /ratio);
-    let secondT = canvasTop - bgHHalf;
 
     obj.css3dObject.element.textContent = innerText;
     obj.css3dObject.element.setAttribute('contenteditable', '');
-    
-    // console.log(element);
-    // console.log("🔴" + innerText + "is" + obj.position.x);
-    // obj.position.x = canvasLeft + allElementsPos.left /ratio;
-    // obj.position.y = canvasTop - allElementsPos.top/ratio;
-    obj.position.x = (secondL + bgLeft) +ratio;
-    obj.position.y = secondT - bgTop +ratio;
     obj.position.z = 1-arrayNum*90;
     obj.css3dObject.element.style.opacity = "10";
     obj.css3dObject.element.style.padding = '0px';
@@ -297,6 +264,44 @@ function makeElementObject(element, allElementsPos, arrayNum) {
     //       ${color2} 20px
     //   )`;
   
+    */
+
+    return obj;
+  }
+
+
+  function makeElementObject2(element, allElementsPos) {
+    let width = allElementsPos.width;
+    let height = allElementsPos.height;
+
+    const el = document.createElement('div');
+    el.classList.add('noScroll');
+    el.innerText = element.innerText;
+    el.style.backgroundColor = "rbga(255,255,255,1)";
+    el.style.color = "rbga(255,0,0,1)";
+    const obj = new CSS3DObject( el );
+    obj.position.x = 0;
+    obj.position.y = 0;
+    obj.position.z = 0;
+    scene.add( obj );
+
+    let material = new THREE.MeshPhongMaterial({
+      opacity: 0.15,
+      color: new THREE.Color(0x111111),
+      blending: THREE.NoBlending,
+      transparent: true
+    });
+
+    var geometry = new THREE.BoxGeometry(width, height, 1);
+    var mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    console.log(obj);
+    el.style['pointer-events'] = 'none';
+    el.style['transform'] = 'translate(0%, 0%) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)';
+    console.log(el);
+    console.log(obj.element.style.transform);
+
     return obj;
   }
 
@@ -325,13 +330,13 @@ function resize() {
 
 function animate(time) {
 
-    light.position.x = 30 * Math.sin(time * 0.003) + 30;
-    light.position.y = 40 * Math.cos(time * 0.001) - 20;
+    // light.position.x = 30 * Math.sin(time * 0.003) + 30;
+    // light.position.y = 40 * Math.cos(time * 0.001) - 20;
     // root.rotation.y = Math.PI / 8 * Math.cos(time * 0.001) - Math.PI / 6;
     // background.rotation.y = Math.PI / 8 * Math.cos(time * 0.001) - Math.PI / 6;
     // background.rotation.x = Math.PI / 10 * Math.sin(time * 0.001) - Math.PI / 10;
-    sphere.rotation.x += 0.005;
-    sphere.rotation.y += 0.005;
+    // sphere.rotation.x += 0.005;
+    // sphere.rotation.y += 0.005;
   
     // scene.updateMatrixWorld();
   
