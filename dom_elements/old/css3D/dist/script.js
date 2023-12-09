@@ -29,6 +29,8 @@ function init() {
   root.position.y = 20;
   root.rotation.y = Math.PI / 3;
   scene.add(root);
+
+  iframeBody.style.overflow = 'hidden'
   
   testobj = makeElementObject(test, 200, 200);
   testobj2 = makeElementObject(test2, 500, 500);
@@ -100,6 +102,9 @@ function init() {
   renderer2.domElement.style.top = 0;
   document.querySelector('#css').appendChild(renderer2.domElement);
 
+  document.addEventListener("wheel", preventScroll, { passive: false });
+
+
   renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
   renderer.setClearColor(0x000000, 0);
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -110,6 +115,10 @@ function init() {
   window.addEventListener('resize', resize);
   resize();
 
+}
+
+function preventScroll(event) {
+  event.preventDefault();
 }
 
 function resize() {

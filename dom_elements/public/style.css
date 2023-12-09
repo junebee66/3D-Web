@@ -2,6 +2,14 @@ body{
     display: block;
     width:100vw;
     height:100vw;
+    overflow: 'hidden';
+    
+}
+
+#iframe1{
+    pointer-events: none;
+    scroll-behavior: none;
+    overflow: hidden;  
 }
 
 
@@ -67,6 +75,7 @@ body{
     top:300px;
     width: 100%;
     height:100%;
+    overflow: hidden; 
 /* turn this off to allow orbit control */
     /* pointer-events: none; */
 }
@@ -74,25 +83,26 @@ body{
 .noScroll {
     pointer-events: none;
     transform: none;
+    overflow: hidden; 
 }
 
 #cssRender{
     position: absolute;
-    /* left:0px;
-    top:0px; */
+    pointer-events: none;
     left:0px;
     top:300px;
     width: 100%;
     height:100%;
-
+    pointer-events: none;
+    overflow: hidden; 
+/* 
     --c1: #122538;
     --c2: #112233;
-    /* background: repeating-linear-gradient(
+    background: repeating-linear-gradient(
         -45deg,
         var(--c1),
         var(--c1) 20px,
         var(--c2) 20px,
         var(--c2) 40px
     ); */
-pointer-events: none;
 }

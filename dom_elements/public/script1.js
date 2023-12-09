@@ -30,15 +30,19 @@ animate();
 
 //3D Scene Initialization
 function init() {
+  document.body.style.overflow = 'hidden';
+  document.addEventListener('wheel', preventScroll, { passive: false });
 
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x87CEEB);
 
-  root = new THREE.Object3D();
-  root.position.x = 0;
-  root.position.y = 0;
-  // root.rotation.y = Math.PI / 3;
-  scene.add(root);
+  // root = new THREE.Object3D();
+  // // root.position.x = 0;
+  // // root.position.y = 0;
+  // root.translateX(0);
+  // root.translateY(0);
+  // root.translateZ(0);
+  // scene.add(root);
 
   const iframe1 = document.getElementById("iframe1");
   const searchText = document.getElementById("searchText");
@@ -60,13 +64,10 @@ function init() {
       }
 
       if (!tagsToSkip[allElements[i].tagName]) {
-        // textObj = makeElementObject2(allElements[i], allElementsPos, i);
-        // textObj = makeElementObject2(allElements[i], 300, 300);
         textObj = makeElementObject2(allElements[i], allElementsPos);
-        //root.add(textObj);
-      // scene.add(root);  
-      // console.log(scene);
-        console.log(allElements[i].tagName);
+        scene.add(textObj);
+        // scene.add(root);  
+
         break;
     }
     }
@@ -76,7 +77,7 @@ function init() {
   // light
   ~function () {
     var ambientLight = new THREE.AmbientLight(0x999999, 1.5);
-    root.add(ambientLight);
+    scene.add(ambientLight);
 
     light = new THREE.PointLight(0xffffff, 1, 0);
     light.castShadow = true;
@@ -88,7 +89,7 @@ function init() {
 
     scene.add(new THREE.PointLightHelper(light, 10));
 
-    root.add(light);
+    scene.add(light);
   }();
 
   ~function () {
@@ -133,7 +134,9 @@ function init() {
   renderer2 = new CSS3DRenderer();
   renderer2.domElement.style.position = 'absolute';
   renderer2.domElement.style.top = 0;
+  renderer2.domElement.style.overflow = 'hidden';
   document.querySelector('#cssRender').appendChild(renderer2.domElement);
+  
 
   renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
   renderer.setClearColor(0x000000, 0);
@@ -274,16 +277,33 @@ function makeElementObject(element, allElementsPos, arrayNum) {
     let width = allElementsPos.width;
     let height = allElementsPos.height;
 
+    const obj = new THREE.Object3D();
+    const innerText = element.innerHTML;
+
     const el = document.createElement('div');
     el.classList.add('noScroll');
-    el.innerText = element.innerText;
-    el.style.backgroundColor = "rbga(255,255,255,1)";
-    el.style.color = "rbga(255,0,0,1)";
-    const obj = new CSS3DObject( el );
-    obj.position.x = 0;
-    obj.position.y = 0;
-    obj.position.z = 0;
-    scene.add( obj );
+    el.innerText = innerText;
+    // el.style.backgroundColor = "rbga(255,255,255,1)";
+    // el.style.color = "rbga(255,0,0,1)";
+    el.style.pointerEvents = 'none';
+    el.style['pointer-events'] = 'none';
+    el.style['transform'] = 'none';
+    el.style.overflowY = 'hidden'; 
+    el.style.overflowX = 'hidden'; 
+    el.style.width = width + 'px';
+    el.style.height = height + 'px';
+    el.style.position = '0,0';
+    el.style.userSelect = 'none';
+    // console.log(el.style.position);
+
+    let css3dObject = new CSS3DObject( el ); //have both the css3dobject and the mesh together as one obj
+    css3dObject.element.style.pointerEvents = 'none';
+    css3dObject.element.style.preventScroll = 'none';
+    css3dObject.element.style.transform = 'none';
+    css3dObject.element.style.overflow = 'hidden'; 
+    console.log(css3dObject.element.style);
+
+    obj.add(css3dObject);
 
     let material = new THREE.MeshPhongMaterial({
       opacity: 0.15,
@@ -294,16 +314,15 @@ function makeElementObject(element, allElementsPos, arrayNum) {
 
     var geometry = new THREE.BoxGeometry(width, height, 1);
     var mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
-
-    console.log(obj);
-    el.style['pointer-events'] = 'none';
-    el.style['transform'] = 'translate(0%, 0%) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)';
-    console.log(el);
-    console.log(obj.element.style.transform);
+    obj.add(mesh);
 
     return obj;
   }
+
+  function preventScroll(event) {
+    event.preventDefault();
+    console.log("prevent scolling");
+}
 
 
 function resize() {
@@ -316,17 +335,6 @@ function resize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
-
-// function animate() {
-
-//     requestAnimationFrame( animate );
-
-//     renderer.render(scene, camera);
-//     renderer2.render(scene, camera);
-
-//     render();
-
-// }
 
 function animate(time) {
 
