@@ -1,144 +1,29 @@
 import * as THREE from 'https://cdn.skypack.dev/three@0.128.0/build/three.module.js';
-
-import TWEEN from 'three/addons/libs/tween.module.js';
-import {AnaglyphEffect} from 'https://cdn.skypack.dev/three@0.128.0/examples/jsm/effects/AnaglyphEffect.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import {AnaglyphEffect} from 'https://cdn.skypack.dev/three@0.128.0/examples/jsm/effects/AnaglyphEffect.js';
 
-
-//When updating information in this code, I have to stop the localhost:12345 in the terminal with ctrl + c 
-//and then run "node index.js" again, then reload the http://localhost:12345/ page to see changes
-
-//accessing iframe elements
-let changeBtn = document.getElementById('changeBtn');
-
-let container, camera, scene, renderer, renderer2, cssRenderer, effect, leftC, root, light, textObj, sphere;
-
-let mouseX = 0;
-let mouseY = 0;
-let canvasLeft = -15;
-let canvasTop = 15;
-let ratio = 20;
-let roots = [];
-
-
+let scene, camera, renderer, renderer2, effect;
 const iframe1 = document.getElementById("iframe1");
 let iframeBody = iframe1.contentWindow.document.querySelector("body");
+
 
 init();
 animate();
 
-//3D Scene Initialization
 function init() {
-  document.body.style.overflow = 'hidden';
-  document.addEventListener('wheel', preventScroll, { passive: false });
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x87CEEB);
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x87CEEB);
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 1000);
+    camera.position.z = 200;
+    // camera.focalLength = 3;
 
-  // root = new THREE.Object3D();
-  // // root.position.x = 0;
-  // // root.position.y = 0;
-  // root.translateX(0);
-  // root.translateY(0);
-  // root.translateZ(0);
-  // scene.add(root);
+    renderer2 = new CSS3DRenderer();
+    renderer2.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer2.domElement);
 
-  const iframe1 = document.getElementById("iframe1");
-  const searchText = document.getElementById("searchText");
-  // let allElements = iframe1.contentWindow.document.querySelector("body").children;
-  const newUrl = searchText.value;
-  iframe1.src = `http://localhost:12345/getdata?name=${newUrl}`;
-
-
-  iframe1.onload = function() {
-    let allElements = iframe1.contentWindow.document.querySelector("body").children;
-    console.log("iframe is loaded");
-
-    for (let i = 0; i < allElements.length; i++) {
-      let allElementsPos = allElements[i].getBoundingClientRect();
-      
-      const tagsToSkip = {
-        'BODY': true,
-        'SCRIPT': true
-      }
-
-      if (!tagsToSkip[allElements[i].tagName]) {
-        textObj = makeElementObject2(allElements[i], allElementsPos);
-        scene.add(textObj);
-        // scene.add(root);  
-
-        break;
-    }
-    }
-  }
-
-
-  // light
-  ~function () {
-    var ambientLight = new THREE.AmbientLight(0x999999, 1.5);
-    scene.add(ambientLight);
-
-    light = new THREE.PointLight(0xffffff, 1, 0);
-    light.castShadow = true;
-    light.position.z = 150;
-    light.shadow.mapSize.width = 1024; // default
-    light.shadow.mapSize.height = 1024; // default
-    light.shadow.camera.near = 1; // default
-    light.shadow.camera.far = 80000; // default
-
-    scene.add(new THREE.PointLightHelper(light, 10));
-
-    scene.add(light);
-  }();
-
-  ~function () {
-    var material = new THREE.MeshPhongMaterial({
-      color: 0x991d65,
-      emissive: 0x000000,
-      specular: 0x111111,
-      side: THREE.DoubleSide,
-      flatShading: false,
-      shininess: 30,
-      vertexColors: true });
-
-    var geometry = new THREE.SphereBufferGeometry(70, 32, 32);
-
-    // give the geometry custom colors for each vertex {{
-    geometry = geometry.toNonIndexed(); // ensure each face has unique vertices
-
-    let position = geometry.attributes.position;
-    var colors = [];
-
-    const color = new THREE.Color();
-    for (var i = 0, l = position.count; i < l; i++) {
-      color.setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.15 + 0.85);
-      colors.push(color.r, color.g, color.b);
-    }
-
-    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-    // }}
-
-    sphere = new THREE.Mesh(geometry, material);
-    sphere.position.z = 20;
-    sphere.position.y = -100;
-    sphere.castShadow = true;
-    sphere.receiveShadow = false;
-    // root.add(sphere);
-  }();
-
-  // container = document.createElement( 'div' );
-  leftC = document.querySelector('#webglRender');
-  // leftC.appendChild( container );
-
-  renderer2 = new CSS3DRenderer();
-  renderer2.domElement.style.position = 'absolute';
-  renderer2.domElement.style.top = 0;
-  renderer2.domElement.style.overflow = 'hidden';
-  document.querySelector('#cssRender').appendChild(renderer2.domElement);
-  
-
-  renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
   renderer.setClearColor(0x000000, 0);
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.shadowMap.enabled = true;
@@ -146,214 +31,93 @@ function init() {
   //container.appendChild( renderer.domElement );
   document.querySelector('#webglRender').appendChild(renderer.domElement);
 
-    //anaglyph camera
-    camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.01, 100 );
-    camera.position.z = 40;
-    camera.focalLength = 3;
-    
-    //default camera
-    // camera = new THREE.PerspectiveCamera();
-    // camera.position.set(0, 0, 1000);
-
-    const controls = new OrbitControls(camera, leftC);
+    const controls = new OrbitControls(camera, renderer.domElement);
     controls.target.set(0, 5, 0);
     controls.update();
 
-    const width = window.innerWidth ;
-    const height = window.innerHeight;
-
     effect = new AnaglyphEffect( renderer );
-    effect.setSize( window.innerWidth, window.innerHeight );
+    // effect.setSize( window.innerWidth, window.innerHeight );
 
-    window.addEventListener('resize', resize);
+    // window.addEventListener('resize', onWindowResize);
+
+    // Access the iframe and its body
+    const iframe1 = document.getElementById("iframe1");
+    const iframeBody = iframe1.contentWindow.document.querySelector("body");
+    const newUrl = searchText.value;
+    iframe1.src = `http://localhost:12345/getdata?name=${newUrl}`;
+
+    iframe1.onload = function() {
+      let allElements = iframe1.contentWindow.document.querySelector("body").children;
+      console.log("iframe is loaded");
+
+        for (let i = 0; i < allElements.length; i++) {
+            const element = allElements[i];
+            const elementPos = element.getBoundingClientRect();
+
+            const css3dObject = makeElementObject(element, elementPos);
+            scene.add(css3dObject);
+
+        }
+    };
     resize();
-
-    {
-        // const skyColor = 0xB1E1FF;  // light blue
-        // const groundColor = 0xB97A20;  // brownish orange
-        const skyColor = 0xffffff;  // light blue
-        const groundColor = 0xffffff;  // brownish orange
-        const intensity = 1;
-        const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
-        scene.add(light);
-      }
 }
 
+function makeElementObject(element, elementPos) {
+    const width = elementPos.width;
+    const height = elementPos.height;
 
-function makeElementObject(element, allElementsPos, arrayNum) {
-    let bgWidth = allElementsPos.width;
-    let bgHeight = allElementsPos.height;
-    let bgResizeW = bgWidth/ratio;
-    let bgResizeH = bgHeight/ratio;
-    let bgWHalf = bgResizeW/2;
-    let bgHHalf = bgResizeH/2;
-    let bgLeft = allElementsPos.left;
-    let bgTop = allElementsPos.top;
-  
-    const obj = new THREE.Object3D();
-    const innerText = element.innerHTML;
+    if (element.tagName.toLowerCase() === 'img') {
+      const img = new Image();
+      img.src = element.src;
+      let imgW = img.width;
+      let imgH = img.height;
 
-    let css3dObject = new CSS3DObject(element);
-    obj.css3dObject = css3dObject;
-    obj.add(css3dObject);
-  
-    /*
-    element.style.width = bgWidth + 'px';
-    element.style.height = bgHeight + 'px';
-    element.style.opacity = 0.999;
-    element.style.boxSizing = 'border-box';
-    element.style.position = "relative";
-    console.log(element);
-    console.log(innerText +element.style.transform);
-  
-    let css3dObject = new CSS3DObject(element);
-    obj.css3dObject = css3dObject;
-    obj.add(css3dObject);
-  
-    // make an invisible plane for the DOM element to chop
-    // clip a WebGL geometry with it.
-    var material = new THREE.MeshPhongMaterial({
-      opacity: 0.15,
-      color: new THREE.Color(0x111111),
-      blending: THREE.NoBlending,
-      transparent: true
-      // side	: THREE.DoubleSide,
-    });
+      const css3dObject = new CSS3DObject(img);
+      // css3dObject.position.set(elementPos.left + imgW/2, -elementPos.top - imgH/2, 0);
+      css3dObject.position.set(elementPos.left + width/2, -elementPos.top - height/2, 0);
 
-    var geometry = new THREE.BoxGeometry(bgWidth, bgHeight, 1);
-    var mesh = new THREE.Mesh(geometry, material);
-
-    //mesh is weird positioned
-    mesh.position.x = 0.5* bgWidth;
-    mesh.position.y = -0.5* bgHeight;
-    mesh.position.z = 0;
-
-    // mesh.position.x = 0;
-    // mesh.position.y = 0;
-    // mesh.position.z = 0;
-
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-    obj.lightShadowMesh = mesh;
-    obj.add(mesh);
-
-    if (element.tagName == 'img') {
-      let secondL = canvasLeft + bgWHalf;// + (firstL /ratio);
-      let secondT = canvasTop - bgHHalf;
-      obj.position.x = secondL + bgLeft;
-      obj.position.y = secondT - bgTop;
-      // obj.position.x = 0.5*bgWidth;
-      // obj.position.y = 0.5*bgHeight;
-    }else{
-      // obj.position.x = canvasLeft + allElementsPos.left;
-      // obj.position.y = canvasTop - allElementsPos.top;
-      obj.position.x = 0.5*bgWidth;
-      obj.position.y = 0.5*bgHeight;
-    }
-
-
-    obj.css3dObject.element.textContent = innerText;
-    obj.css3dObject.element.setAttribute('contenteditable', '');
-    obj.position.z = 1-arrayNum*90;
-    obj.css3dObject.element.style.opacity = "10";
-    obj.css3dObject.element.style.padding = '0px';
-    // const color1 = '#7bb38d';
-    // const color2 = '#71a381';
-    // obj.css3dObject.element.style.background = `repeating-linear-gradient(
-    //       45deg,
-    //       ${color1},
-    //       ${color1} 10px,
-    //       ${color2} 10px,
-    //       ${color2} 20px
-    //   )`;
-  
-    */
-
-    return obj;
+      return css3dObject;
   }
 
-
-  function makeElementObject2(element, allElementsPos) {
-    let width = allElementsPos.width;
-    let height = allElementsPos.height;
-
-    const obj = new THREE.Object3D();
-    const innerText = element.innerHTML;
 
     const el = document.createElement('div');
     el.classList.add('noScroll');
-    el.innerText = innerText;
-    // el.style.backgroundColor = "rbga(255,255,255,1)";
-    // el.style.color = "rbga(255,0,0,1)";
-    el.style.pointerEvents = 'none';
-    el.style['pointer-events'] = 'none';
-    el.style['transform'] = 'none';
-    el.style.overflowY = 'hidden'; 
-    el.style.overflowX = 'hidden'; 
+    el.innerText = element.innerHTML;
     el.style.width = width + 'px';
     el.style.height = height + 'px';
-    el.style.position = '0,0';
-    el.style.userSelect = 'none';
-    // console.log(el.style.position);
+    el.style.pointerEvents = 'none';
+    el.style.overflowY = 'hidden';
+    el.style.overflowX = 'hidden';
 
-    let css3dObject = new CSS3DObject( el ); //have both the css3dobject and the mesh together as one obj
-    css3dObject.element.style.pointerEvents = 'none';
-    css3dObject.element.style.preventScroll = 'none';
-    css3dObject.element.style.transform = 'none';
-    css3dObject.element.style.overflow = 'hidden'; 
-    console.log(css3dObject.element.style);
+    const computedStyles = window.getComputedStyle(element);
 
-    obj.add(css3dObject);
+    // Set color and font size to the CSS3DObject
+    el.style.color = computedStyles.color;
+    el.style.fontSize = computedStyles.fontSize;
 
-    let material = new THREE.MeshPhongMaterial({
-      opacity: 0.15,
-      color: new THREE.Color(0x111111),
-      blending: THREE.NoBlending,
-      transparent: true
-    });
 
-    var geometry = new THREE.BoxGeometry(width, height, 1);
-    var mesh = new THREE.Mesh(geometry, material);
-    obj.add(mesh);
+    const css3dObject = new CSS3DObject(el);
+    css3dObject.position.set(elementPos.left, -elementPos.top, 0);
+    // css3dObject.position.set(elementPos.left, -elementPos.top, -50);
 
-    return obj;
-  }
-
-  function preventScroll(event) {
-    event.preventDefault();
-    console.log("prevent scolling");
+    return css3dObject;
 }
 
-
 function resize() {
-    camera.fov = 45;
     camera.aspect = window.innerWidth / window.innerHeight;
-    camera.near = 1;
-    camera.far = 8000;
     camera.updateProjectionMatrix();
-    renderer2.setSize(window.innerWidth, window.innerHeight);
     renderer.setSize(window.innerWidth, window.innerHeight);
-  }
+    renderer2.setSize(window.innerWidth, window.innerHeight);
+}
 
-
-function animate(time) {
-
-    // light.position.x = 30 * Math.sin(time * 0.003) + 30;
-    // light.position.y = 40 * Math.cos(time * 0.001) - 20;
-    // root.rotation.y = Math.PI / 8 * Math.cos(time * 0.001) - Math.PI / 6;
-    // background.rotation.y = Math.PI / 8 * Math.cos(time * 0.001) - Math.PI / 6;
-    // background.rotation.x = Math.PI / 10 * Math.sin(time * 0.001) - Math.PI / 10;
-    // sphere.rotation.x += 0.005;
-    // sphere.rotation.y += 0.005;
-  
-    // scene.updateMatrixWorld();
-  
+function animate() {
+    requestAnimationFrame(animate);
     renderer.render(scene, camera);
     renderer2.render(scene, camera);
-  
-    requestAnimationFrame(animate);
+
     render();
-  }
+}
+
 
 function render() {
 
