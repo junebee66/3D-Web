@@ -9,11 +9,6 @@ import { DragControls } from 'https://cdn.skypack.dev/three@0.128.0/examples/jsm
 let scene, camera, renderer, renderer2, effect, dragControls;
 const iframe1 = document.getElementById('iframe1');
 let iframeBody = iframe1.contentWindow.document.querySelector('body');
-let ratio = 20;
-let canvasTop = 400;
-let canvasLeft = -1300;
-
-//run "node index.js" to see the code result at web url: http://localhost:12345/
 
 init();
 animate();
@@ -21,18 +16,10 @@ animate();
 changeBtn.onclick = function(){
 
   //clean previous 3d objects in the scene
-  scene.traverse(object => {
-    if (object instanceof THREE.Object3D) {
-      object.traverse(child => {
-        if (child instanceof THREE.Mesh) {
-          child.geometry.dispose();
-          child.material.dispose();
-        }
-      });
-      scene.remove(object);
-    }
-  });
-
+  while (scene.children.length > 0) {
+    const child = scene.children[0];
+    scene.remove(child);
+}
 
   // update iframe url to input box link
   const searchText = document.getElementById("searchText");
@@ -63,14 +50,12 @@ changeBtn.onclick = function(){
 }
 }
 
-
 function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x87CEEB);
 
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 1000);
   camera.position.z = 350;
-  let canvasDiv = document.getElementById('canvas');
 
   renderer2 = new CSS3DRenderer();
   renderer2.setSize(window.innerWidth, window.innerHeight);
@@ -119,35 +104,38 @@ function makeElementObject(element, elementPos) {
   const width = elementPos.width;
   const height = elementPos.height;
 
-  //crucial to setting the position ratio correct
-  element.style.width = width + 'px';
-  element.style.height = height + 'px';
-  element.style.position = elementPos.left + ',' + elementPos.top + ', 0';
-
-  const css3dObject = new CSS3DObject(element);
-
   if (element.tagName.toLowerCase() === 'img') {
-    css3dObject.position.x = canvasLeft + width + elementPos.left;
-    css3dObject.position.y = canvasTop - height - elementPos.top;
-    css3dObject.position.z = 0;
-  }
-  // css3dObject.position.set(canvasLeft + elementPos.left / ratio, -canvasTop - elementPos.top /ratio, 0);
-  // css3dObject.position.x = elementPos.left;
-  // css3dObject.position.y = elementPos.top;
-  // css3dObject.position.z = 0;
-  css3dObject.position.x = canvasLeft + width + elementPos.left;
-  css3dObject.position.y = canvasTop - height - elementPos.top;
-  css3dObject.position.z = 0;
+    const img = new Image();
+    img.src = element.src;
+    let imgW = img.width;
+    let imgH = img.height;
 
+    const css3dObject = new CSS3DObject(img);
+    css3dObject.position.set(elementPos.left + imgW / 2, -elementPos.top - imgH / 2, 0);
+
+    addHoverAnimation(css3dObject);
+
+    return css3dObject;
+  }
+
+  const el = document.createElement('div');
+  el.classList.add('noScroll');
+  el.innerText = element.innerHTML;
+  el.style.width = width + 'px';
+  el.style.height = height + 'px';
+  el.style.pointerEvents = 'none';
+  el.style.overflowY = 'hidden';
+  el.style.overflowX = 'hidden';
+
+  const computedStyles = window.getComputedStyle(element);
+
+  el.style.color = computedStyles.color;
+  el.style.fontSize = computedStyles.fontSize;
+
+  const css3dObject = new CSS3DObject(el);
+  css3dObject.position.set(elementPos.left, -elementPos.top, 0);
 
   addHoverAnimation(css3dObject);
-
-  // const geometry = new THREE.BoxGeometry( 0.1*(30+1), 0.1*(30+1), 0.1*(30+1) ); 
-  // const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); 
-  // const cube = new THREE.Mesh( geometry, material ); 
-  // cube.position.x = elementPos.left;
-  // cube.position.y = elementPos.top;
-  // scene.add( cube );
 
   return css3dObject;
 }

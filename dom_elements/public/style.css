@@ -3,19 +3,36 @@ body{
     width:100vw;
     height:100vw;
     /* overflow: 'hidden'; */
+    padding-left: 5vw;
+    padding-right: 5vw;
+    overflow: hidden;
     
 }
+
+h1 { font-family: "Helvetica Neue", 
+    Helvetica, Arial, sans-serif; 
+    font-size: 6vh;
+    font-style: normal; 
+    font-variant: normal; 
+    font-weight: 700; 
+    line-height: auto;
+    padding-left: 2%; 
+    width: 30%;
+} 
 
 #iframe1{
     pointer-events: none;
     scroll-behavior: none;
+    width:30%;
+    /* width: 30%;
+    padding-right:5% ; */
     /* overflow: hidden;   */
 }
 
 
 #topBar {
     width: 100vw;
-    height:35vh;
+    height:25vh;
     margin-top: 3vh;
     /* padding-top: 5vh;
     padding-left: 5vh; */
@@ -23,10 +40,11 @@ body{
 }
 
 #searchBar {
-    width: 50%;
+    width: 30%;
     height: 30%;
     margin-top:10vh;
-    margin-left: 3vw;
+    /* padding-left: 2%; */
+    /* margin-left: 3vw; */
 
 }
 
@@ -37,27 +55,15 @@ body{
     
 }
 
-#searchButton {
-    position: relative;
-    top:0px;
-
-    width: 10%;
-    height: 100%;
-    padding-block: 0px;
-    padding-inline: 0px;
-}
-
 #changeBtn {
-    position: relative;
-    top:0px;
-
     width: 10%;
     height: 100%;
-    padding-block: 0px;
-    padding-inline: 0px;
+    top:0;
+    /* padding-block: 0px;
+    padding-inline: 0px; */
 }
 
-#looking {
+/* #looking {
     position: absolute;
     top:0px;
     right:0;
@@ -65,19 +71,28 @@ body{
     height:30%;
     padding-right: 3vw;
 
+} */
+
+#canvas{
+    /* display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr; */
+    height: 80%;
+    background-color: red;
+    overflow: hidden;
+
 }
 
 #webglRender{
+    /* grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: 1;
+    z-index: 2; */
     position: absolute;
-    /* left:0px;
-    top:0px; */
-    left:0px;
-    top:300px;
-    width: 100%;
+    left: 2vw;
+    top: 30vh;
+    width:100%;
     height:100%;
-    /* overflow: hidden;  */
-/* turn this off to allow orbit control */
-    /* pointer-events: none; */
 }
 
 .noScroll {
@@ -87,22 +102,14 @@ body{
 }
 
 #cssRender{
+    /* grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: 1;
+    z-index: 2;
+    pointer-events: none; */
     position: absolute;
-    pointer-events: none;
-    left:0px;
-    top:300px;
-    width: 100%;
+    left: 2vw;
+    top: 30vh;
+    width:100%;
     height:100%;
-    pointer-events: none;
-    /* overflow: hidden;  */
-/* 
-    --c1: #122538;
-    --c2: #112233;
-    background: repeating-linear-gradient(
-        -45deg,
-        var(--c1),
-        var(--c1) 20px,
-        var(--c2) 20px,
-        var(--c2) 40px
-    ); */
 }

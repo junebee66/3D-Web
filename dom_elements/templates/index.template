@@ -40,6 +40,7 @@
                         
         <div id="topBar">
                 <!-- The Search -->
+                <h1> 3D WEB TRANSLATOR </h1>
                 <div class="example" id="searchBar">
                         <input type="text" placeholder="Search" value="https://junebee66.github.io/3D-Web/dom_elements/basic_web/basic.html" name="search" id="searchText">
                         <button type="submit" id="changeBtn"><i class="fa fa-search"></i></button>
@@ -52,10 +53,15 @@
                         
         </div>
 
+
+        <!--<div id="canvas">-->
                 <div id="cssRender"></div>
                 <div id="webglRender"></div>
+        </div>
+        
 
         <!--<script type="module" src="script-seperateDom.js"></script>-->
+        <!--<script type="module" src="script-divs.js"></script>-->
         <script type="module" src="script1.js"></script>
         <!--<script type="module" src="script_oneIframeObj.js"></script>-->
         <!--<script type="module" src="script-original.js"></script>-->
