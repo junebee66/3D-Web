@@ -12,6 +12,7 @@ let iframeBody = iframe1.contentWindow.document.querySelector('body');
 let ratio = 20;
 let canvasTop = 400;
 let canvasLeft = -1300;
+const objects = [];
 
 //run "node index.js" to see the code result at web url: http://localhost:12345/
 
@@ -20,19 +21,22 @@ animate();
 
 changeBtn.onclick = function(){
 
-  //clean previous 3d objects in the scene
-  scene.traverse(object => {
-    if (object instanceof THREE.Object3D) {
-      object.traverse(child => {
-        if (child instanceof THREE.Mesh) {
-          child.geometry.dispose();
-          child.material.dispose();
-        }
-      });
-      scene.remove(object);
-    }
-  });
+  // for (const obj of objects) {
+  //   scene.remove(obj);
+  // }
 
+  // objects.length = 0;
+
+
+  for( var i = scene.children.length - 1; i >= 0; i--) { 
+    let obj = scene.children[i];
+    scene.remove(obj); 
+  }
+
+  while (scene.children.length)
+  {
+      scene.remove(scene.children[2]);
+  }
 
   // update iframe url to input box link
   const searchText = document.getElementById("searchText");
@@ -45,20 +49,22 @@ changeBtn.onclick = function(){
     let allElements = iframe1.contentWindow.document.querySelector('body').children;
     console.log('iframe is loaded');
 
-    const objects = [];
-
     const tagsToSkip = {
       'BODY': true,
       'SCRIPT': true
     }
+
+    console.log(objects);
     // if (!tagsToSkip[allElements[i].tagName]) {
     for (let i = 0; i < allElements.length; i++) {
       const element = allElements[i];
       const elementPos = element.getBoundingClientRect();
-
       const css3dObject = makeElementObject(element, elementPos);
-      scene.add(css3dObject);
       objects.push(css3dObject);
+    }
+
+    for (const obj of objects) {
+      scene.add(obj);
     }
 }
 }
@@ -105,11 +111,11 @@ function init() {
       const elementPos = element.getBoundingClientRect();
 
       const css3dObject = makeElementObject(element, elementPos);
-      scene.add(css3dObject);
       objects.push(css3dObject);
     }
-
-    // dragControls = new DragControls(objects, camera, renderer.domElement);
+    for (const obj of objects) {
+      scene.add(obj);
+    }
   };
 
   resize();
@@ -131,10 +137,7 @@ function makeElementObject(element, elementPos) {
     css3dObject.position.y = canvasTop - height - elementPos.top;
     css3dObject.position.z = 0;
   }
-  // css3dObject.position.set(canvasLeft + elementPos.left / ratio, -canvasTop - elementPos.top /ratio, 0);
-  // css3dObject.position.x = elementPos.left;
-  // css3dObject.position.y = elementPos.top;
-  // css3dObject.position.z = 0;
+
   css3dObject.position.x = canvasLeft + width + elementPos.left;
   css3dObject.position.y = canvasTop - height - elementPos.top;
   css3dObject.position.z = 0;
