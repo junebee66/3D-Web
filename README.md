@@ -1,4 +1,5 @@
 # 3D-Web Translator
+<img src="https://github.com/junebee66/3D-Web/blob/main/demo/web-translator.gif" width="100%">
 This independent study project in Computer Science at the Courant Institute of Mathematical Sciences, New York University, led by June Bee under the supervision of Craig Kapp, focuses on converting traditional websites into 3D user interfaces.
 
 ⭐️ The objective of this independent study is to adapt the AVR filter's existing algorithm to suit the web environment and to develop algorithms for segmenting distinct visual elements found on websites and translate into 3D orientation for anaglyph glasses. 
