@@ -17,7 +17,7 @@ Explore rendering options for representing 2D image-based data in 3D using A-Fra
 
 The most likely goal of the project is to implement item #1, but significant work can be done on researching possible options for implementing item #2.
 
-## Resources:
+# Resources:
 Monocular depth estimation: https://keras.io/examples/vision/depth_estimation/
 Depth estimation (Hugging Face): https://huggingface.co/docs/datasets/main/en/depth_estimation
 
