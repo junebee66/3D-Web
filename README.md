@@ -21,6 +21,8 @@ Explore rendering options for representing 2D image-based data in 3D using A-Fra
 The most likely goal of the project is to implement item #1, but significant work can be done on researching possible options for implementing item #2.
 
 # 🛠️ How to Use?
+<img src="https://github.com/junebee66/3D-Web/blob/main/demo/blue-convert.gif" width="100%">
+</br>
 ### 1️⃣ Start Website
 In folder terminal run "node index.js" again, then reload the http://localhost:12345/ page to see changes
 
@@ -28,8 +30,20 @@ In folder terminal run "node index.js" again, then reload the http://localhost:1
 When updating information in this code, stop the localhost:12345 in the terminal with ctrl + c 
 and then run "node index.js" again, then reload the http://localhost:12345/ page to see changes
 
+### 3️⃣ Console Broswer
+Copy and paste the following code into your broswer
+<script src="https://gist.github.com/junebee66/c1b40c5d8cf0de125dd9f2a4ebcd747c.js"></script>
+</br>
+</br>
+<img src="https://github.com/junebee66/3D-Web/blob/main/demo/color-convert.gif" width="100%">
+</br>
+
 
 # Resources:
 Monocular depth estimation: https://keras.io/examples/vision/depth_estimation/
+</br>
 Depth estimation (Hugging Face): https://huggingface.co/docs/datasets/main/en/depth_estimation
+</br>
+In Broswer Code (OrionReed/dom3d.js): https://gist.github.com/OrionReed/4c3778ebc2b5026d2354359ca49077ca
+
 
