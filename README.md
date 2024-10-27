@@ -7,6 +7,7 @@ This independent study project in Computer Science at the Courant Institute of M
 
 🔵 AVR filter is an algorithm written by June Bee is an algorithm designed to transform visual elements within web environments into 3D orientations compatible with anaglyph glasses. The technology seeks to enhance the accessibility of XR resources to the public and establish a novel form of human-computer interaction in the digital era. By having digital content present in physical space, users gain the capability to execute more sophisticated interactions and commands with the internet world.
 
+# ☄️ Goals
 📍 The goals of this project include:
 
 ## DOM Rendering
@@ -18,6 +19,15 @@ Explore algorithms and/or machine learning techniques to infer height from arbit
 Explore rendering options for representing 2D image-based data in 3D using A-Frame / AVR.
 
 The most likely goal of the project is to implement item #1, but significant work can be done on researching possible options for implementing item #2.
+
+# 🛠️ How to Use?
+### 1️⃣ Start Website
+In folder terminal run "node index.js" again, then reload the http://localhost:12345/ page to see changes
+
+### 2️⃣ Update Code
+When updating information in this code, stop the localhost:12345 in the terminal with ctrl + c 
+and then run "node index.js" again, then reload the http://localhost:12345/ page to see changes
+
 
 # Resources:
 Monocular depth estimation: https://keras.io/examples/vision/depth_estimation/
