@@ -40,10 +40,10 @@ Copy and paste the following code into your broswer
 
 
 # Resources:
-Monocular depth estimation: https://keras.io/examples/vision/depth_estimation/
+⭐️ Monocular depth estimation: https://keras.io/examples/vision/depth_estimation/
 </br>
-Depth estimation (Hugging Face): https://huggingface.co/docs/datasets/main/en/depth_estimation
+⭐️ Depth estimation (Hugging Face): https://huggingface.co/docs/datasets/main/en/depth_estimation
 </br>
-In Broswer Code (OrionReed/dom3d.js): https://gist.github.com/OrionReed/4c3778ebc2b5026d2354359ca49077ca
+⭐️ In Broswer Code (OrionReed/dom3d.js): https://gist.github.com/OrionReed/4c3778ebc2b5026d2354359ca49077ca
 
 
